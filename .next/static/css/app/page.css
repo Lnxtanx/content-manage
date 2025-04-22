@@ -1,0 +1,142 @@
+/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/app/styles.module.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************/
+.styles_container__T_VWp {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--surface-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+}
+
+.styles_header__h_GQt {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.styles_formGroup__MOgyo {
+  margin-bottom: 1.5rem;
+}
+
+.styles_formGroup__MOgyo label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.styles_formControl__97E62 {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.styles_formControl__97E62:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+}
+
+.styles_formControl__97E62::placeholder {
+  color: var(--text-secondary);
+}
+
+.styles_formControl__97E62 option {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.styles_btn__U1gyx {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.styles_btn__U1gyx:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+.styles_btn__U1gyx:disabled {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+.styles_loading__6iPOc {
+  position: relative;
+  opacity: 0.8;
+}
+
+.styles_loading__6iPOc::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  right: 1rem;
+  margin-top: -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: styles_spin__s0e8t 0.8s linear infinite;
+}
+
+.styles_message__mZYjY {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  animation: styles_fadeIn__Qa1qh 0.3s ease-out;
+}
+
+.styles_success__ykCtR {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+.styles_error__HFAwN {
+  background-color: rgba(207, 102, 121, 0.1);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+@keyframes styles_spin__s0e8t {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes styles_fadeIn__Qa1qh {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .styles_container__T_VWp {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}
+

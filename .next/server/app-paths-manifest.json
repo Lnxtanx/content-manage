@@ -1,0 +1,7 @@
+{
+  "/view-syllabuses/page": "app/view-syllabuses/page.js",
+  "/page": "app/page.js",
+  "/api/classes/route": "app/api/classes/route.js",
+  "/api/schools/route": "app/api/schools/route.js",
+  "/api/lessons/route": "app/api/lessons/route.js"
+}
