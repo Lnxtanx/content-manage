@@ -1,0 +1,122 @@
+/*!************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/app/manage-classes/styles.module.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************/
+.styles_container__EfNUy {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.styles_header__w_euC {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.styles_form__hPlgf {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.styles_formGroup__H_ixI {
+  margin-bottom: 1.5rem;
+}
+
+.styles_formGroup__H_ixI label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.styles_formControl__cGHxu {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+.styles_formControl__cGHxu:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.styles_btn__hQtUZ {
+  background: #0070f3;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.styles_btn__hQtUZ:hover {
+  background: #0060df;
+}
+
+.styles_btn__hQtUZ:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.styles_loading__bURoe {
+  opacity: 0.7;
+}
+
+.styles_message__ixlTH {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.styles_success__qrg5l {
+  background: #e6f4ea;
+  color: #1e7e34;
+  border: 1px solid #c3e6cb;
+}
+
+.styles_error__T18fn {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.styles_classesContainer__lR2VM {
+  margin-top: 2rem;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.styles_classesContainer__lR2VM h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.styles_classList__Tqgk0 {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.styles_classItem__3Qz36 {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background: #f8f9fa;
+}
+
+.styles_noClasses__J_Egx {
+  color: #666;
+  font-style: italic;
+}
+

@@ -2,8 +2,11 @@ services:
   - type: web
     name: content-manager
     env: node
+    plan: starter
     buildCommand: npm install && npx prisma generate && npm run build
     startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /api/classes
     envVars:
       - key: NODE_ENV
         value: production
@@ -17,3 +20,8 @@ services:
         sync: false
       - key: S3_BUCKET_NAME
         sync: false
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: content-manager
+          property: host

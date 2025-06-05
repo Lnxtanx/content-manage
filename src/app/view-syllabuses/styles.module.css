@@ -156,3 +156,18 @@
     font-size: 0.75rem;
   }
 }
+
+
+.deleteBtn {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.deleteBtn:hover {
+  background-color: darkred;
+}

@@ -5,15 +5,15 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background: var(--surface-color);
+  background: #111111; /* Dark background */
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333;
 }
 
 .styles_header__h_GQt {
   font-size: 1.5rem;
-  color: var(--text-color);
+  color: #d1b3ff; /* Light purple text */
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -26,39 +26,39 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: #e0e0e0;
 }
 
 .styles_formControl__97E62 {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid #444;
   border-radius: 4px;
   font-size: 1rem;
+  background-color: #1a1a1a;
+  color: #f5f5f5;
   transition: all 0.3s ease;
-  background-color: var(--background-color);
-  color: var(--text-color);
 }
 
 .styles_formControl__97E62:focus {
-  border-color: var(--primary-color);
+  border-color: #b266ff; /* Purple focus */
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+  box-shadow: 0 0 0 2px rgba(178, 102, 255, 0.4);
 }
 
 .styles_formControl__97E62::placeholder {
-  color: var(--text-secondary);
+  color: #999;
 }
 
 .styles_formControl__97E62 option {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #1a1a1a;
+  color: #f5f5f5;
 }
 
 .styles_btn__U1gyx {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--primary-color);
+  background-color: #b266ff; /* Purple */
   color: white;
   border: none;
   border-radius: 4px;
@@ -69,12 +69,12 @@
 }
 
 .styles_btn__U1gyx:hover {
-  background-color: var(--secondary-color);
+  background-color: #a14dff;
   transform: translateY(-1px);
 }
 
 .styles_btn__U1gyx:disabled {
-  background-color: var(--border-color);
+  background-color: #555;
   cursor: not-allowed;
 }
 
@@ -106,14 +106,14 @@
 
 .styles_success__ykCtR {
   background-color: rgba(76, 175, 80, 0.1);
-  color: var(--success-color);
-  border: 1px solid var(--success-color);
+  color: #4caf50;
+  border: 1px solid #4caf50;
 }
 
 .styles_error__HFAwN {
   background-color: rgba(207, 102, 121, 0.1);
-  color: var(--error-color);
-  border: 1px solid var(--error-color);
+  color: #cf6679;
+  border: 1px solid #cf6679;
 }
 
 @keyframes styles_spin__s0e8t {

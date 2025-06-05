@@ -160,3 +160,18 @@
   }
 }
 
+
+.styles_deleteBtn__v8NQ2 {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.styles_deleteBtn__v8NQ2:hover {
+  background-color: darkred;
+}
+

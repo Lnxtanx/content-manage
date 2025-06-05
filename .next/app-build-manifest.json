@@ -17,6 +17,12 @@
       "static/chunks/main-app.js",
       "static/css/app/view-syllabuses/page.css",
       "static/chunks/app/view-syllabuses/page.js"
+    ],
+    "/manage-classes/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/manage-classes/page.css",
+      "static/chunks/app/manage-classes/page.js"
     ]
   }
 }
