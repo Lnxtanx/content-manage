@@ -28,13 +28,18 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
 
-    const pdfKey = lesson.pdfUrl; // Assuming pdfUrl is the key to the file in your S3 bucket
+    const pdfKey = lesson.pdfUrl; // Assuming pdfUrl is the key to the file in your S3 bucket    // Check if S3 bucket name is configured
+    const bucketName = process.env.S3_BUCKET_NAME;
+    if (!bucketName) {
+      console.error('S3_BUCKET_NAME environment variable is not set');
+      return NextResponse.json({ error: 'S3 configuration error' }, { status: 500 });
+    }
 
     // Delete the PDF from the S3 bucket
     const s3Params = {
-      Bucket: process.env.S3_BUCKET_NAME,
+      Bucket: bucketName,
       Key: pdfKey,
-    };
+    } as AWS.S3.DeleteObjectRequest;
 
     try {
       await s3.deleteObject(s3Params).promise();
