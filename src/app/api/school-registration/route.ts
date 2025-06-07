@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
   try {
@@ -24,12 +25,17 @@ export async function POST(request: Request) {
         { error: "School with this email already exists" },
         { status: 400 }
       );
-    }    // Create new school
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new school
     const school = await prisma.schools.create({
       data: {
         name,
         email,
-        password, // Note: In production, password should be hashed
+        password: hashedPassword,
         updatedAt: new Date(),
       },
     });
