@@ -1,6 +1,9 @@
 {
   "/page": "app/page.js",
   "/school-registration/page": "app/school-registration/page.js",
+  "/view-schools/page": "app/view-schools/page.js",
+  "/add-teacher/page": "app/add-teacher/page.js",
   "/view-teachers/page": "app/view-teachers/page.js",
-  "/view-syllabuses/page": "app/view-syllabuses/page.js"
+  "/api/school-registration/route": "app/api/school-registration/route.js",
+  "/api/teacher-registration/route": "app/api/teacher-registration/route.js"
 }
