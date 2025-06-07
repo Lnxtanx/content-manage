@@ -1,26 +1,86 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { 
+  FaSchool, 
+  FaChalkboardTeacher, 
+  FaUserPlus, 
+  FaUsers,
+  FaBook,
+  FaUpload,
+  FaList,
+  FaGraduationCap
+} from 'react-icons/fa';
+import styles from './Navigation.module.css';
+
+const navItems = [
+  {
+    label: 'Dashboard',
+    href: '/',
+    icon: <FaGraduationCap />,
+  },
+  {
+    label: 'Register School',
+    href: '/school-registration',
+    icon: <FaSchool />,
+  },
+  {
+    label: 'View Schools',
+    href: '/view-schools',
+    icon: <FaSchool />,
+  },
+  {
+    label: 'Add Teacher',
+    href: '/add-teacher',
+    icon: <FaUserPlus />,
+  },
+  {
+    label: 'View Teachers',
+    href: '/view-teachers',
+    icon: <FaChalkboardTeacher />,
+  },
+  {
+    label: 'Upload Syllabus',
+    href: '/upload-syllabus',
+    icon: <FaUpload />,
+  },
+  {
+    label: 'View Syllabuses',
+    href: '/view-syllabuses',
+    icon: <FaBook />,
+  },
+  {
+    label: 'Manage Classes',
+    href: '/manage-classes',
+    icon: <FaList />,
+  },
+];
 
 export default function Navigation() {
-  const linkStyle = {
-    color: 'var(--text-color)',
-    textDecoration: 'none',
-    transition: 'color 0.3s ease'
-  };
+  const pathname = usePathname();
 
   return (
-    <header className="sticky-header">
-      <div className="site-title">Syllabus Management System</div>
-      <nav style={{ display: 'flex', gap: '1.5rem' }}>
-        <Link href="/" style={linkStyle}>
-          Upload Syllabus
-        </Link>
-        <Link href="/view-syllabuses" style={linkStyle}>
-          View Syllabuses
-        </Link>
-        <Link href="/manage-classes" style={linkStyle}>
-          Manage Classes
-        </Link>
-      </nav>
-    </header>
+    <nav className={styles.nav}>
+      <div className={styles.logo}>
+        <FaGraduationCap size={24} />
+        <span>Management system </span>
+      </div>
+      <ul className={styles.navList}>
+        {navItems.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className={`${styles.navLink} ${
+                pathname === item.href ? styles.active : ''
+              }`}
+            >
+              <span className={styles.icon}>{item.icon}</span>
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

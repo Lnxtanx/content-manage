@@ -1,161 +1,143 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import Link from 'next/link';
+import { FaSchool, FaChalkboardTeacher, FaUserPlus, FaUsers, FaUpload, FaBook, FaList, FaExclamationTriangle } from 'react-icons/fa';
+import styles from './dashboard.module.css';
 
-interface Class {
-  id: number;
-  name: string;
-}
+const CautionBanner = () => (
+  <div className={styles.cautionBanner}>
+    <FaExclamationTriangle className={styles.cautionIcon} />
+    <div className={styles.cautionContent}>
+      <h2>⚠️ Important Notice</h2>
+      <p>Please exercise caution when managing data in this system. Once data is deleted from the database, it <strong>cannot be retrieved</strong>. Make sure to double-check before performing any deletion operations.</p>
+    </div>
+  </div>
+);
 
-export default function Home() {
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [selectedClass, setSelectedClass] = useState('');
-  const [lessonName, setLessonName] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [isGlobalSyllabus, setIsGlobalSyllabus] = useState(true);
+const DashboardCard = ({ title, description, icon, link }: {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  link: string;
+}) => (
+  <Link href={link} className={styles.card}>
+    <div className={styles.cardIcon}>{icon}</div>
+    <h3 className={styles.cardTitle}>{title}</h3>
+    <p className={styles.cardDescription}>{description}</p>
+  </Link>
+);
+
+function StatsDisplay() {
+  const [stats, setStats] = useState({ 
+    schoolCount: 0,
+    teacherCount: 0,
+  });
 
   useEffect(() => {
-    // Fetch classes
-    fetch('/api/classes')
-      .then((res) => res.json())
-      .then((data) => setClasses(data))
-      .catch((error) => console.error('Error fetching classes:', error));
+    const fetchStats = async () => {
+      try {
+        const [schoolsRes, teachersRes] = await Promise.all([
+          fetch('/api/school-registration'),
+          fetch('/api/teacher-registration'),
+        ]);
+
+        const schools = await schoolsRes.json();
+        const teachers = await teachersRes.json();
+
+        setStats({
+          schoolCount: schools.length,
+          teacherCount: teachers.length,
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  return (
+    <div className={styles.stats}>
+      <div className={styles.statItem}>
+        <FaSchool size={20} />
+        <span>{stats.schoolCount}</span>
+        <p>Schools</p>
+      </div>
+      <div className={styles.statItem}>
+        <FaUsers size={20} />
+        <span>{stats.teacherCount}</span>
+        <p>Teachers</p>
+      </div>
+    </div>
+  );
+}
 
-    if (!selectedClass || !lessonName || !file) {
-      setMessage('Please fill in all fields');
-      setTimeout(() => setMessage(''), 5000);
-      return;
+export default function Home() {  const cards = [
+    {
+      title: 'Register School',
+      description: 'Add a new school to the system',
+      icon: <FaSchool size={24} />,
+      link: '/school-registration',
+    },
+    {
+      title: 'View Schools',
+      description: 'Manage and view all registered schools',
+      icon: <FaSchool size={24} />,
+      link: '/view-schools',
+    },
+    {
+      title: 'Add Teacher',
+      description: 'Register a new teacher to a school',
+      icon: <FaUserPlus size={24} />,
+      link: '/add-teacher',
+    },
+    {
+      title: 'View Teachers',
+      description: 'Manage and view all registered teachers',
+      icon: <FaChalkboardTeacher size={24} />,
+      link: '/view-teachers',
+    },
+    {
+      title: 'Upload Syllabus',
+      description: 'Upload a new syllabus PDF',
+      icon: <FaUpload size={24} />,
+      link: '/upload-syllabus',
+    },
+    {
+      title: 'View Syllabuses',
+      description: 'View and manage uploaded syllabuses',
+      icon: <FaBook size={24} />,
+      link: '/view-syllabuses',
+    },
+    {
+      title: 'Manage Classes',
+      description: 'Add and manage school classes',
+      icon: <FaList size={24} />,
+      link: '/manage-classes',
     }
-
-    if (!file.type.includes('pdf')) {
-      setMessage('Please upload a PDF file only');
-      setTimeout(() => setMessage(''), 5000);
-      return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      setMessage('File size should be less than 10MB');
-      setTimeout(() => setMessage(''), 5000);
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-    
-    const formData = new FormData();
-    formData.append('classId', selectedClass);
-    formData.append('lessonName', lessonName);
-    formData.append('file', file);
-    formData.append('isForAllSchools', isGlobalSyllabus.toString());
-
-    try {
-      const response = await fetch('/api/upload-syllabus', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage('✓ Syllabus uploaded successfully!');
-        setSelectedClass('');
-        setLessonName('');
-        setFile(null);
-        setIsGlobalSyllabus(true);
-        setTimeout(() => setMessage(''), 5000);
-
-        const fileInput = document.getElementById('file') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-      } else {
-        setMessage(`Error: ${data.error || 'Failed to upload syllabus'}`);
-        setTimeout(() => setMessage(''), 5000);
-      }
-    } catch (error) {
-      setMessage('Error: Network error or server not responding');
-      setTimeout(() => setMessage(''), 5000);
-    } finally {
-      setLoading(false);
-    }
-  };
+  ];
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>Upload Syllabus</h1>
-      {message && (
-        <div className={`${styles.message} ${message.includes('✓') ? styles.success : styles.error}`}>
-          {message}
-        </div>
-      )}
+      <CautionBanner />
+      <div className={styles.header}>
+        <h1 className={styles.title}> Management Dashboard</h1>
+        <p className={styles.subtitle}>Manage schools, teachers, and more from one place</p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="class">Select Class</label>
-          <select
-            id="class"
-            className={styles.formControl}
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-            required
-          >
-            <option value="">Select a class</option>
-            {classes.map((cls) => (
-              <option key={cls.id} value={cls.id}>
-                {cls.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className={styles.grid}>
+        {cards.map((card, index) => (
+          <DashboardCard key={index} {...card} />
+        ))}
+      </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="lessonName">Lesson Name</label>
-          <input
-            type="text"
-            id="lessonName"
-            className={styles.formControl}
-            value={lessonName}
-            onChange={(e) => setLessonName(e.target.value)}
-            required
-          />
+      <div className={styles.statsContainer}>
+        <div className={styles.statsCard}>
+          <h3>Quick Stats</h3>
+          <StatsDisplay />
         </div>
-
-        <div className={styles.formGroup}>
-          <label>
-            <input
-              type="checkbox"
-              checked={isGlobalSyllabus}
-              onChange={(e) => setIsGlobalSyllabus(e.target.checked)}
-            />
-            {' '}Make this syllabus available to all schools
-          </label>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="file">Upload PDF</label>
-          <input
-            type="file"
-            id="file"
-            className={styles.formControl}
-            accept="application/pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          className={`${styles.btn} ${loading ? styles.loading : ''}`}
-          disabled={loading}
-        >
-          {loading ? 'Uploading...' : 'Upload Syllabus'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

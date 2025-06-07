@@ -12,17 +12,29 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/view-syllabuses/page": [
+    "/school-registration/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/view-syllabuses/page.css",
-      "static/chunks/app/view-syllabuses/page.js"
+      "static/css/app/school-registration/page.css",
+      "static/chunks/app/school-registration/page.js"
+    ],
+    "/view-teachers/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/view-teachers/page.css",
+      "static/chunks/app/view-teachers/page.js"
     ],
     "/manage-classes/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/manage-classes/page.css",
       "static/chunks/app/manage-classes/page.js"
+    ],
+    "/view-syllabuses/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/view-syllabuses/page.css",
+      "static/chunks/app/view-syllabuses/page.js"
     ]
   }
 }

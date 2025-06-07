@@ -1,8 +1,6 @@
 {
   "/page": "app/page.js",
-  "/api/classes/route": "app/api/classes/route.js",
-  "/view-syllabuses/page": "app/view-syllabuses/page.js",
-  "/manage-classes/page": "app/manage-classes/page.js",
-  "/api/lessons/route": "app/api/lessons/route.js",
-  "/api/upload-syllabus/route": "app/api/upload-syllabus/route.js"
+  "/school-registration/page": "app/school-registration/page.js",
+  "/view-teachers/page": "app/view-teachers/page.js",
+  "/view-syllabuses/page": "app/view-syllabuses/page.js"
 }
