@@ -12,29 +12,11 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/school-registration/page": [
+    "/manage-classes/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/school-registration/page.css",
-      "static/chunks/app/school-registration/page.js"
-    ],
-    "/view-schools/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/view-schools/page.css",
-      "static/chunks/app/view-schools/page.js"
-    ],
-    "/add-teacher/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/add-teacher/page.css",
-      "static/chunks/app/add-teacher/page.js"
-    ],
-    "/view-teachers/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/view-teachers/page.css",
-      "static/chunks/app/view-teachers/page.js"
+      "static/css/app/manage-classes/page.css",
+      "static/chunks/app/manage-classes/page.js"
     ],
     "/upload-syllabus/page": [
       "static/chunks/webpack.js",
@@ -47,12 +29,6 @@
       "static/chunks/main-app.js",
       "static/css/app/view-syllabuses/page.css",
       "static/chunks/app/view-syllabuses/page.js"
-    ],
-    "/manage-classes/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/manage-classes/page.css",
-      "static/chunks/app/manage-classes/page.js"
     ]
   }
 }
