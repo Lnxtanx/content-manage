@@ -8,9 +8,19 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
-    "migrate-classes": "ts-node --project scripts/tsconfig.json scripts/migrate-classes.ts"
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "migrate-classes": "ts-node --project scripts/tsconfig.json scripts/migrate-classes.ts",
+    "docker:build": "docker build -t content-manager .",
+    "docker:run": "docker run -p 3000:3000 content-manager",
+    "docker:compose": "docker-compose up -d",
+    "docker:compose:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker:compose:down": "docker-compose down",
+    "docker:compose:logs": "docker-compose logs -f",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [],
+  "keywords": ["nextjs", "prisma", "postgresql", "aws", "education"],
   "author": "",
   "license": "ISC",
   "description": "Syllabus Management System for Schools",
@@ -32,6 +42,13 @@
     "typescript": "^5.3.0"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.11.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
