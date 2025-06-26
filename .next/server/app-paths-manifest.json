@@ -1,10 +1,19 @@
 {
-  "/api/school-registration/route": "app/api/school-registration/route.js",
-  "/page": "app/page.js",
-  "/manage-classes/page": "app/manage-classes/page.js",
-  "/api/teacher-registration/route": "app/api/teacher-registration/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/health/route": "app/api/health/route.js",
   "/api/classes/route": "app/api/classes/route.js",
-  "/view-syllabuses/page": "app/view-syllabuses/page.js",
+  "/api/schools/route": "app/api/schools/route.js",
+  "/api/lessons/[id]/route": "app/api/lessons/[id]/route.js",
   "/api/lessons/route": "app/api/lessons/route.js",
-  "/upload-syllabus/page": "app/upload-syllabus/page.js"
+  "/api/school-registration/route": "app/api/school-registration/route.js",
+  "/api/teacher-registration/route": "app/api/teacher-registration/route.js",
+  "/manage-classes/page": "app/manage-classes/page.js",
+  "/api/upload-syllabus/route": "app/api/upload-syllabus/route.js",
+  "/school-registration/page": "app/school-registration/page.js",
+  "/upload-syllabus/page": "app/upload-syllabus/page.js",
+  "/page": "app/page.js",
+  "/view-schools/page": "app/view-schools/page.js",
+  "/view-syllabuses/page": "app/view-syllabuses/page.js",
+  "/add-teacher/page": "app/add-teacher/page.js",
+  "/view-teachers/page": "app/view-teachers/page.js"
 }

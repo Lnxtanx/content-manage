@@ -1,34 +1,91 @@
 {
   "pages": {
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/page.css",
-      "static/chunks/app/page.js"
+    "/_not-found/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/chunks/app/_not-found/page-4b9eb8aab41bf6df.js"
     ],
     "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/259b8f8806c1960c.css",
+      "static/chunks/8e1d74a4-e6d33ba6cd1fcd11.js",
+      "static/chunks/599-7f768e061ebb8373.js",
+      "static/chunks/app/layout-a63f5e51c4478e5d.js"
     ],
     "/manage-classes/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/manage-classes/page.css",
-      "static/chunks/app/manage-classes/page.js"
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/ecb7f492887ced3d.css",
+      "static/chunks/app/manage-classes/page-1fab4d35df8b3a1c.js"
+    ],
+    "/school-registration/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/01497eff231837a7.css",
+      "static/chunks/app/school-registration/page-2ce94639f077b460.js"
     ],
     "/upload-syllabus/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/upload-syllabus/page.css",
-      "static/chunks/app/upload-syllabus/page.js"
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/ed673d404261ffec.css",
+      "static/chunks/app/upload-syllabus/page-9dd327ac3f0f760e.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/87055a1dc5605af3.css",
+      "static/chunks/8e1d74a4-e6d33ba6cd1fcd11.js",
+      "static/chunks/599-7f768e061ebb8373.js",
+      "static/chunks/app/page-03bfb64ac8b32cd4.js"
+    ],
+    "/view-schools/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/ed902d5cddd66def.css",
+      "static/chunks/8e1d74a4-e6d33ba6cd1fcd11.js",
+      "static/chunks/599-7f768e061ebb8373.js",
+      "static/chunks/app/view-schools/page-2b43d42c17eed154.js"
     ],
     "/view-syllabuses/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/view-syllabuses/page.css",
-      "static/chunks/app/view-syllabuses/page.js"
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/183e3ce4c3b31fcf.css",
+      "static/chunks/app/view-syllabuses/page-f07247f71862465a.js"
+    ],
+    "/add-teacher/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/31413232c804bc89.css",
+      "static/chunks/app/add-teacher/page-570e722e4d23a49a.js"
+    ],
+    "/view-teachers/page": [
+      "static/chunks/webpack-8b79cd0cf3530b85.js",
+      "static/chunks/fd9d1056-9f91b5e418130764.js",
+      "static/chunks/117-e44c88db53920bf9.js",
+      "static/chunks/main-app-611d08cee2990a94.js",
+      "static/css/15709804cbbbad75.css",
+      "static/chunks/8e1d74a4-e6d33ba6cd1fcd11.js",
+      "static/chunks/599-7f768e061ebb8373.js",
+      "static/chunks/app/view-teachers/page-456592ea2cb50082.js"
     ]
   }
 }
