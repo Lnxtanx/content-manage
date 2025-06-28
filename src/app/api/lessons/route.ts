@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+// Define the type for the lesson from Prisma
+type LessonWithRelations = {
+  id: number;
+  lessonName: string;
+  pdfUrl: string;
+  isForAllSchools: boolean;
+  Class?: {
+    name: string;
+  } | null;
+  schools?: {
+    name: string;
+  } | null;
+};
+
 // GET endpoint to fetch lessons
 export async function GET(request: NextRequest) {
   try {
@@ -43,7 +57,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Format the lessons, clearly indicating global vs school-specific
-    const formattedLessons = lessons.map(lesson => ({
+    const formattedLessons = lessons.map((lesson: LessonWithRelations) => ({
       id: lesson.id,
       lessonName: lesson.lessonName,
       pdfUrl: lesson.pdfUrl,
