@@ -1,8 +1,9 @@
 {
-  "/page": "app/page.js",
-  "/api/school-registration/route": "app/api/school-registration/route.js",
-  "/school-registration/page": "app/school-registration/page.js",
-  "/api/teacher-registration/route": "app/api/teacher-registration/route.js",
   "/upload-syllabus/page": "app/upload-syllabus/page.js",
-  "/api/classes/route": "app/api/classes/route.js"
+  "/api/classes/route": "app/api/classes/route.js",
+  "/page": "app/page.js",
+  "/api/teacher-registration/route": "app/api/teacher-registration/route.js",
+  "/api/school-registration/route": "app/api/school-registration/route.js",
+  "/add-teacher/page": "app/add-teacher/page.js",
+  "/api/teacher-registration/subject-list/route": "app/api/teacher-registration/subject-list/route.js"
 }

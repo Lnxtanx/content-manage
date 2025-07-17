@@ -92,8 +92,12 @@ export async function GET(request: Request) {
         teacherName: true,
         email: true,
         qualification: true,
-        subjectAssigned: true,
-        classAssigned: true,
+        subject: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         experienceYears: true,
         status: true,
         schools: {

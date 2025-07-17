@@ -28,12 +28,12 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     dob: '',
     email: '',
     password: '',
-    confirmPassword: '',
     qualification: '',
     subject_id: '',
     experienceYears: '',
     phone_number: '',
     aadhaar_number: '',
+    status: 'active',
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -52,11 +52,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     setError('');
     setLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
     if (!formData.subject_id) {
       setError('Please select a subject');
       setLoading(false);
@@ -84,6 +79,7 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
       data.append('experienceYears', formData.experienceYears);
       data.append('phone_number', formData.phone_number);
       data.append('aadhaar_number', formData.aadhaar_number);
+      data.append('status', formData.status);
       if (profileImage) {
         data.append('profileImage', profileImage);
       }
@@ -189,14 +185,13 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label htmlFor="profileImage">Profile Image</label>
           <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
+            type="file"
+            id="profileImage"
+            name="profileImage"
+            accept="image/*"
+            onChange={handleProfileImageChange}
             className={styles.input}
           />
         </div>
@@ -264,15 +259,17 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="profileImage">Profile Image</label>
-          <input
-            type="file"
-            id="profileImage"
-            name="profileImage"
-            accept="image/*"
-            onChange={handleProfileImageChange}
-            className={styles.input}
-          />
+          <label htmlFor="status">Status</label>
+          <select
+            id="status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className={styles.select}
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
         </div>
         <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Adding...' : 'Add Teacher'}
