@@ -3,75 +3,63 @@
   margin: 0 auto;
   padding: 2rem;
   min-height: calc(100vh - 150px);
+  background: #fff;
 }
-
 .title {
-  color: var(--text-color);
+  color: #ff8800;
   font-size: 2.5rem;
   margin-bottom: 2rem;
   text-align: center;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px #ffd6a0;
 }
-
 .form {
-  background: var(--card-background);
+  background: #fff7ef;
   padding: 2.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px #ff88001a;
+  border: 1px solid #ffd6a0;
   position: relative;
   overflow: hidden;
 }
-
-.formGroup {
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
 .formGroup label {
   display: block;
   margin-bottom: 0.75rem;
-  color: var(--text-color);
+  color: #222;
   font-weight: 500;
   font-size: 1rem;
 }
-
 .input {
   width: 100%;
   padding: 0.875rem;
-  background-color: var(--secondary-background);
-  border: 1px solid var(--border-color);
+  background-color: #f8f8f8;
+  border: 1px solid #ffd6a0;
   border-radius: 8px;
-  color: var(--text-color);
+  color: #222;
   font-size: 1rem;
   transition: all 0.2s ease;
 }
-
 .input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+  border-color: #ff8800;
+  box-shadow: 0 0 0 2px #ff880033;
 }
-
 .input::placeholder {
-  color: var(--text-secondary);
+  color: #aaa;
 }
-
 .error {
-  color: var(--error-text);
-  background: var(--error-background);
+  color: #d32f2f;
+  background: #fff0f0;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   font-weight: 500;
   animation: fadeIn 0.3s ease;
 }
-
 .submitButton {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--hover-color));
-  color: var(--text-color);
+  background: linear-gradient(135deg, #ff8800, #ff6600);
+  color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 1.125rem;
@@ -81,18 +69,16 @@
   position: relative;
   overflow: hidden;
 }
-
 .submitButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px #ff880033;
 }
-
 .submitButton:active {
   transform: translateY(0);
 }
-
 .submitButton:disabled {
-  background: var(--border-color);
+  background: #ffd6a0;
+  color: #aaa;
   cursor: not-allowed;
   transform: none;
 }

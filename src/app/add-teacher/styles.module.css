@@ -2,62 +2,51 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #1a1a1a;
+  background-color: #fff;
   min-height: 100vh;
 }
-
 .title {
-  color: #ffffff;
+  color: #ff8800;
   margin-bottom: 2rem;
   font-size: 2rem;
 }
-
 .form {
-  background: #2d2d2d;
+  background: #fff7ef;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 136, 0, 0.08);
 }
-
-.formGroup {
-  margin-bottom: 1.5rem;
-}
-
 .formGroup label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #ffffff;
+  color: #222;
   font-weight: 500;
 }
-
 .input,
 .select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #404040;
+  border: 1px solid #ffd6a0;
   border-radius: 4px;
   font-size: 1rem;
-  background-color: #333333;
-  color: #ffffff;
+  background-color: #f8f8f8;
+  color: #222;
 }
-
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: #0070f3;
-  background-color: #404040;
+  border-color: #ff8800;
+  background-color: #fff;
 }
-
 .error {
-  color: #ff4444;
-  background: #3d2626;
+  color: #d32f2f;
+  background: #fff0f0;
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
 }
-
 .submitButton {
-  background: #0070f3;
+  background: #ff8800;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -66,18 +55,16 @@
   cursor: pointer;
   width: 100%;
 }
-
 .submitButton:hover {
-  background: #0051a8;
+  background: #ff6600;
 }
-
 .submitButton:disabled {
-  background: #ccc;
+  background: #ffd6a0;
+  color: #aaa;
   cursor: not-allowed;
 }
-
 .loading {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: #aaa;
 }

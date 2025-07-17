@@ -10,18 +10,18 @@
 }
 
 :root {
-  --primary-color: #60a5fa;
-  --background-color: #111827;
-  --secondary-background: #1f2937;
-  --text-color: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
-  --hover-color: #2563eb;
-  --card-background: #1f2937;
-  --error-background: #771d1d;
-  --error-text: #fecaca;
-  --success-background: #065f46;
-  --success-text: #a7f3d0;
+  --primary-color: #ff8800;
+  --background-color: #fff;
+  --secondary-background: #f8f8f8;
+  --text-color: #222;
+  --text-secondary: #666;
+  --border-color: #ffd6a0;
+  --hover-color: #ff6600;
+  --card-background: #fff7ef;
+  --error-background: #fff0f0;
+  --error-text: #d32f2f;
+  --success-background: #f0fff0;
+  --success-text: #388e3c;
 }
 
 /* Smooth scrolling for all browsers */

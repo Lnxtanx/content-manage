@@ -9,15 +9,21 @@
   height: 100vh;
   z-index: 1000;
   border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 0;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #e2e8f0;
   color: #2d3748;
   font-size: 1.25rem;
   font-weight: 600;
@@ -56,4 +62,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.notificationIcon {
+  color: #0070f3;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificationIcon:hover {
+  background: #e3e8f0;
 }

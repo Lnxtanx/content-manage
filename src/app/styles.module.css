@@ -2,15 +2,15 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #111111; /* Dark background */
+  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
-  border: 1px solid #333;
+  box-shadow: 0 4px 6px rgba(255, 136, 0, 0.08);
+  border: 1px solid #ffd6a0;
 }
 
 .header {
   font-size: 1.5rem;
-  color: #d1b3ff; /* Light purple text */
+  color: #ff8800;
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -23,39 +23,39 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #e0e0e0;
+  color: #222;
 }
 
 .formControl {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #444;
+  border: 1px solid #ffd6a0;
   border-radius: 4px;
   font-size: 1rem;
-  background-color: #1a1a1a;
-  color: #f5f5f5;
+  background-color: #f8f8f8;
+  color: #222;
   transition: all 0.3s ease;
 }
 
 .formControl:focus {
-  border-color: #b266ff; /* Purple focus */
+  border-color: #ff8800;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(178, 102, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 136, 0, 0.2);
 }
 
 .formControl::placeholder {
-  color: #999;
+  color: #aaa;
 }
 
 .formControl option {
-  background-color: #1a1a1a;
-  color: #f5f5f5;
+  background-color: #fff;
+  color: #222;
 }
 
 .btn {
   width: 100%;
   padding: 0.75rem;
-  background-color: #b266ff; /* Purple */
+  background-color: #ff8800;
   color: white;
   border: none;
   border-radius: 4px;
@@ -66,12 +66,13 @@
 }
 
 .btn:hover {
-  background-color: #a14dff;
+  background-color: #ff6600;
   transform: translateY(-1px);
 }
 
 .btn:disabled {
-  background-color: #555;
+  background-color: #ffd6a0;
+  color: #aaa;
   cursor: not-allowed;
 }
 

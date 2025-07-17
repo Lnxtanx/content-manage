@@ -2,80 +2,60 @@
   max-width: 1000px;
   margin: 2rem auto;
   padding: 1rem;
-  background: var(--surface-color);
+  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px #ff88001a;
+  border: 1px solid #ffd6a0;
 }
-
 .title {
   font-size: 1.5rem;
-  color: var(--text-color);
+  color: #ff8800;
   margin-bottom: 2rem;
   text-align: center;
 }
-
-.formGroup {
-  margin-bottom: 2rem;
-}
-
 .formGroup label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: #222;
 }
-
 .formControl {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid #ffd6a0;
   border-radius: 4px;
   font-size: 1rem;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #f8f8f8;
+  color: #222;
   transition: all 0.3s ease;
 }
-
 .formControl:focus {
-  border-color: var(--primary-color);
+  border-color: #ff8800;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+  box-shadow: 0 0 0 2px #ff880033;
 }
-
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 1rem;
-  overflow-x: auto;
-}
-
-.tableWrapper {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 1rem;
+.tableContainer {
+  background: #fff7ef;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px #ff88001a;
+  overflow-x: auto;
+  border: 1px solid #ffd6a0;
 }
-
 .table th,
 .table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid #ffd6a0;
+  color: #222;
 }
-
 .table th {
-  background-color: rgba(0, 0, 0, 0.2);
+  background: #fff3e0;
   font-weight: 600;
-  color: var(--text-color);
+  color: #ff8800;
 }
-
 .table tr:last-child td {
   border-bottom: none;
 }
-
 .schoolBadge {
   display: inline-flex;
   align-items: center;
@@ -83,25 +63,22 @@
   border-radius: 16px;
   font-size: 0.875rem;
 }
-
 .schoolSpecific {
-  background-color: rgba(0, 112, 243, 0.1);
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
+  background-color: #fff3e0;
+  color: #ff8800;
+  border: 1px solid #ff8800;
 }
-
 .allSchools {
-  background-color: rgba(76, 175, 80, 0.1);
-  color: var(--success-color);
-  border: 1px solid var(--success-color);
+  background-color: #f0fff0;
+  color: #388e3c;
+  border: 1px solid #388e3c;
 }
-
 .btn {
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color);
-  color: white;
+  background-color: #ff8800;
+  color: #fff;
   border: none;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -109,65 +86,29 @@
   transition: all 0.3s ease;
   text-decoration: none;
 }
-
 .btn:hover {
-  background-color: var(--secondary-color);
+  background-color: #ff6600;
   transform: translateY(-1px);
 }
-
 .loading {
   text-align: center;
-  color: var(--text-secondary);
+  color: #aaa;
   padding: 2rem;
 }
-
 .noData {
   text-align: center;
-  color: var(--text-secondary);
+  color: #aaa;
   padding: 2rem;
 }
-
-@media (max-width: 768px) {
-  .container {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
-  .table th,
-  .table td {
-    padding: 0.75rem;
-  }
-  
-  .schoolBadge {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .table th,
-  .table td {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  .btn {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.75rem;
-  }
-}
-
-
 .deleteBtn {
-  background-color: red;
-  color: white;
+  background-color: #d32f2f;
+  color: #fff;
   padding: 5px 10px;
   margin-left: 10px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
 }
-
 .deleteBtn:hover {
-  background-color: darkred;
+  background-color: #b91c1c;
 }

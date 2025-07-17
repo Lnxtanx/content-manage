@@ -16,18 +16,19 @@ model Teacher {
   password         String             @db.VarChar(255)
   profileImage     String?            @db.VarChar(1000)
   qualification    String?            @db.VarChar(100)
-  subjectAssigned  String?            @db.VarChar(100)
-  classAssigned    String?            @db.VarChar(50)
   experienceYears  Int?
   status           String             @default("active") @db.VarChar(20)
   createdAt        DateTime           @default(now()) @db.Timestamp(6)
   updatedAt        DateTime           @db.Timestamp(6)
-  lastLogin        DateTime?          @db.Timestamp(6)
+  subject_id       Int?
+  phone_number     String?            @db.VarChar(20)
+  aadhaar_number   String?            @unique @db.VarChar(12)
   ClassResponse    ClassResponse[]
   EventApplication EventApplication[]
   LeaveApplication LeaveApplication[]
   LessonLog        LessonLog[]
   schools          schools            @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher_school")
+  subject          subject?           @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_teacher_subject")
   timetables       Timetable[]
 
   @@index([email])
@@ -118,8 +119,10 @@ model LessonPdf {
   isForAllSchools Boolean  @default(false)
   createdAt       DateTime @default(now()) @db.Timestamp(6)
   updatedAt       DateTime @default(now()) @db.Timestamp(6)
+  subject_id      Int?
   Class           Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_class")
   schools         schools? @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_school")
+  subject         subject? @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_subject")
 
   @@index([classId])
   @@index([schoolId])
@@ -133,12 +136,19 @@ model schools {
   createdAt        DateTime           @default(now()) @db.Timestamp(6)
   updatedAt        DateTime           @db.Timestamp(6)
   isActive         Boolean            @default(true)
+  logo             String?
+  address          String?
+  principal_name   String?            @db.VarChar(255)
+  location         String?
+  school_address   String?
   ClassResponse    ClassResponse[]
   EventApplication EventApplication[]
   LeaveApplication LeaveApplication[]
   LessonLog        LessonLog[]
   LessonPdf        LessonPdf[]
   announcement     announcement[]
+  job_post         job_post[]
+  notification     notification[]
   teachers         Teacher[]
 
   @@index([email])
@@ -153,4 +163,47 @@ model announcement {
   schools   schools  @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_announcement_school")
 
   @@index([school_id], map: "idx_announcement_school_id")
+}
+
+model faq {
+  id          Int       @id @default(autoincrement())
+  question    String
+  answer      String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  answered_at DateTime? @db.Timestamp(6)
+}
+
+model job_post {
+  id                 Int       @id @default(autoincrement())
+  type               String    @db.VarChar(100)
+  position           String    @db.VarChar(150)
+  qualification      String
+  experience         String?
+  additional_message String?
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  school_id          Int?
+  schools            schools?  @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_jobpost_school")
+
+  @@index([school_id], map: "idx_job_post_school")
+}
+
+model notification {
+  id         Int       @id @default(autoincrement())
+  type       String    @db.VarChar(50)
+  title      String
+  message    String?
+  is_read    Boolean?  @default(false)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  school_id  Int?
+  schools    schools?  @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_notification_school")
+
+  @@index([school_id], map: "idx_notification_school_id")
+}
+
+model subject {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique @db.VarChar(100)
+  code      String?     @db.VarChar(20)
+  LessonPdf LessonPdf[]
+  teachers  Teacher[]
 }

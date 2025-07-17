@@ -15,11 +15,19 @@ async function getTeachers(schoolId: string | null) {
         teacherName: true,
         email: true,
         qualification: true,
-        subjectAssigned: true,
-        classAssigned: true,
         experienceYears: true,
         status: true,
+        dob: true,
+        phone_number: true,
+        aadhaar_number: true,
+        profileImage: true,
         schools: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        subject: {
           select: {
             id: true,
             name: true,

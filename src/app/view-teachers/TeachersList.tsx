@@ -9,14 +9,20 @@ interface Teacher {
   teacherName: string;
   email: string;
   qualification: string | null;
-  subjectAssigned: string | null;
-  classAssigned: string | null;
   experienceYears: number | null;
   status: string;
+  dob: string;
+  phone_number: string | null;
+  aadhaar_number: string | null;
+  profileImage: string | null;
   schools: {
     id: number;
     name: string;
   };
+  subject: {
+    id: number;
+    name: string;
+  } | null;
 }
 
 interface TeachersListProps {
@@ -74,7 +80,10 @@ export default function TeachersList({ initialTeachers }: TeachersListProps) {
               <th>Email</th>
               <th>Qualification</th>
               <th>Subject</th>
-              <th>Class</th>
+              <th>Phone</th>
+              <th>Aadhaar</th>
+              <th>DOB</th>
+              <th>Profile Image</th>
               <th>Experience (Years)</th>
               <th>Status</th>
               <th>Actions</th>
@@ -87,8 +96,11 @@ export default function TeachersList({ initialTeachers }: TeachersListProps) {
                 <td>{teacher.schools.name}</td>
                 <td>{teacher.email}</td>
                 <td>{teacher.qualification || '-'}</td>
-                <td>{teacher.subjectAssigned || '-'}</td>
-                <td>{teacher.classAssigned || '-'}</td>
+                <td>{teacher.subject ? teacher.subject.name : '-'}</td>
+                <td>{teacher.phone_number || '-'}</td>
+                <td>{teacher.aadhaar_number || '-'}</td>
+                <td>{teacher.dob ? new Date(teacher.dob).toLocaleDateString() : '-'}</td>
+                <td>{teacher.profileImage ? <img src={teacher.profileImage} alt="Profile" style={{width:40,height:40,borderRadius:'50%'}} /> : '-'}</td>
                 <td>{teacher.experienceYears || '-'}</td>
                 <td>{teacher.status}</td>
                 <td>

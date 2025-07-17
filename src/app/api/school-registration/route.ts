@@ -1,11 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from 'bcrypt';
+import { uploadFileToS3 } from '@/lib/s3';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, password } = body;
+    const contentType = request.headers.get('content-type') || '';
+    let data: any = {};
+    let logoUrl: string | null = null;
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      data = Object.fromEntries(formData.entries());
+      const logo = formData.get('logo') as File | null;
+      if (logo && logo.size > 0) {
+        const buffer = Buffer.from(await logo.arrayBuffer());
+        const fileName = `${Date.now()}-${logo.name}`;
+        logoUrl = await uploadFileToS3(buffer, fileName, logo.type || 'image/png', 'school-logos');
+      }
+    } else {
+      data = await request.json();
+    }
+    const { name, email, password, address, principal_name, location, school_address } = data;
 
     // Validate input
     if (!name || !email || !password) {
@@ -36,6 +51,11 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
+        logo: logoUrl,
+        address: address || null,
+        principal_name: principal_name || null,
+        location: location || null,
+        school_address: school_address || null,
         updatedAt: new Date(),
       },
     });

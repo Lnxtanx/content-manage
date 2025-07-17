@@ -1,9 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './styles.module.css';
 
 interface School {
+  id: number;
+  name: string;
+}
+
+interface Subject {
   id: number;
   name: string;
 }
@@ -25,13 +30,22 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     password: '',
     confirmPassword: '',
     qualification: '',
-    subjectAssigned: '',
-    classAssigned: '',
+    subject_id: '',
     experienceYears: '',
+    phone_number: '',
+    aadhaar_number: '',
   });
-
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/teacher-registration/subject-list')
+      .then(res => res.json())
+      .then(data => setSubjects(data))
+      .catch(() => setSubjects([]));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,32 +57,44 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
       setLoading(false);
       return;
     }
-
+    if (!formData.subject_id) {
+      setError('Please select a subject');
+      setLoading(false);
+      return;
+    }
+    if (!formData.phone_number) {
+      setError('Phone number is required');
+      setLoading(false);
+      return;
+    }
+    if (!formData.aadhaar_number) {
+      setError('Aadhaar number is required');
+      setLoading(false);
+      return;
+    }
     try {
+      const data = new FormData();
+      data.append('schoolId', formData.schoolId);
+      data.append('teacherName', formData.teacherName);
+      data.append('dob', formData.dob);
+      data.append('email', formData.email);
+      data.append('password', formData.password);
+      data.append('qualification', formData.qualification);
+      data.append('subject_id', formData.subject_id);
+      data.append('experienceYears', formData.experienceYears);
+      data.append('phone_number', formData.phone_number);
+      data.append('aadhaar_number', formData.aadhaar_number);
+      if (profileImage) {
+        data.append('profileImage', profileImage);
+      }
       const response = await fetch('/api/teacher-registration', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          schoolId: parseInt(formData.schoolId),
-          teacherName: formData.teacherName,
-          dob: formData.dob,
-          email: formData.email,
-          password: formData.password,
-          qualification: formData.qualification || undefined,
-          subjectAssigned: formData.subjectAssigned || undefined,
-          classAssigned: formData.classAssigned || undefined,
-          experienceYears: formData.experienceYears ? parseInt(formData.experienceYears) : undefined,
-        }),
+        body: data,
       });
-
-      const data = await response.json();
-
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to register teacher');
+        throw new Error(result.error || 'Failed to register teacher');
       }
-
       router.push('/view-teachers');
       router.refresh();
     } catch (err: any) {
@@ -85,11 +111,17 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     });
   };
 
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfileImage(e.target.files[0]);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Add New Teacher</h1>
       {error && <div className={styles.error}>{error}</div>}
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form onSubmit={handleSubmit} className={styles.form} encType="multipart/form-data">
         <div className={styles.formGroup}>
           <label htmlFor="schoolId">School</label>
           <select
@@ -108,7 +140,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             ))}
           </select>
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="teacherName">Teacher Name</label>
           <input
@@ -121,7 +152,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="dob">Date of Birth</label>
           <input
@@ -134,7 +164,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="email">Email</label>
           <input
@@ -147,7 +176,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="password">Password</label>
           <input
@@ -160,7 +188,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
@@ -173,7 +200,6 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="qualification">Qualification</label>
           <input
@@ -185,31 +211,22 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
         <div className={styles.formGroup}>
-          <label htmlFor="subjectAssigned">Subject Assigned</label>
-          <input
-            type="text"
-            id="subjectAssigned"
-            name="subjectAssigned"
-            value={formData.subjectAssigned}
+          <label htmlFor="subject_id">Subject</label>
+          <select
+            id="subject_id"
+            name="subject_id"
+            value={formData.subject_id}
             onChange={handleChange}
-            className={styles.input}
-          />
+            required
+            className={styles.select}
+          >
+            <option value="">Select a subject</option>
+            {subjects.map((subject) => (
+              <option key={subject.id} value={subject.id}>{subject.name}</option>
+            ))}
+          </select>
         </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="classAssigned">Class Assigned</label>
-          <input
-            type="text"
-            id="classAssigned"
-            name="classAssigned"
-            value={formData.classAssigned}
-            onChange={handleChange}
-            className={styles.input}
-          />
-        </div>
-
         <div className={styles.formGroup}>
           <label htmlFor="experienceYears">Years of Experience</label>
           <input
@@ -221,7 +238,42 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
             className={styles.input}
           />
         </div>
-
+        <div className={styles.formGroup}>
+          <label htmlFor="phone_number">Phone Number</label>
+          <input
+            type="text"
+            id="phone_number"
+            name="phone_number"
+            value={formData.phone_number}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="aadhaar_number">Aadhaar Number</label>
+          <input
+            type="text"
+            id="aadhaar_number"
+            name="aadhaar_number"
+            value={formData.aadhaar_number}
+            onChange={handleChange}
+            required
+            className={styles.input}
+            maxLength={12}
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="profileImage">Profile Image</label>
+          <input
+            type="file"
+            id="profileImage"
+            name="profileImage"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+            className={styles.input}
+          />
+        </div>
         <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Adding...' : 'Add Teacher'}
         </button>

@@ -10,7 +10,8 @@ import {
   FaBook,
   FaUpload,
   FaList,
-  FaGraduationCap
+  FaGraduationCap,
+  FaBell
 } from 'react-icons/fa';
 import styles from './Navigation.module.css';
 
@@ -55,6 +56,21 @@ const navItems = [
     href: '/manage-classes',
     icon: <FaList />,
   },
+  {
+    label: 'Manage Subjects',
+    href: '/manage-subject',
+    icon: <FaBook />,
+  },
+  {
+    label: 'Job Posts',
+    href: '/job-posts',
+    icon: <FaList />,
+  },
+  {
+    label: 'FAQ',
+    href: '/faq',
+    icon: <FaBook />,
+  },
 ];
 
 export default function Navigation() {
@@ -62,9 +78,14 @@ export default function Navigation() {
 
   return (
     <nav className={styles.nav}>
-      <div className={styles.logo}>
-        <FaGraduationCap size={24} />
-        <span>Management system </span>
+      <div className={styles.logoRow}>
+        <div className={styles.logo}>
+          <FaGraduationCap size={24} />
+          <span>Management system </span>
+        </div>
+        <Link href="/notifications" className={styles.notificationIcon} title="Notifications">
+          <FaBell size={22} />
+        </Link>
       </div>
       <ul className={styles.navList}>
         {navItems.map((item) => (

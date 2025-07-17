@@ -2,7 +2,8 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  color: var(--text-color);
+  color: #222;
+  background: #fff;
 }
 
 .header {
@@ -13,30 +14,31 @@
 }
 
 .title {
-  color: #333;
+  color: #ff8800;
   margin: 0;
   font-size: 2rem;
 }
 
 .addButton {
-  background: #0070f3;
+  background: #ff8800;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
+  border: none;
 }
 
 .addButton:hover {
-  background: #0051a8;
+  background: #ff6600;
 }
 
 .tableContainer {
-  background: var(--card-background);
+  background: #fff7ef;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px #ff88001a;
   overflow-x: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid #ffd6a0;
 }
 
 .table {
@@ -48,14 +50,14 @@
 .table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-color);
+  border-bottom: 1px solid #ffd6a0;
+  color: #222;
 }
 
 .table th {
-  background: var(--secondary-background);
+  background: #fff3e0;
   font-weight: 500;
-  color: var(--text-color);
+  color: #ff8800;
 }
 
 .status {
@@ -67,19 +69,19 @@
 }
 
 .active {
-  background-color: var(--success-background);
-  color: var(--success-text);
+  background-color: #f0fff0;
+  color: #388e3c;
 }
 
 .inactive {
-  background-color: var(--error-background);
-  color: var(--error-text);
+  background-color: #fff0f0;
+  color: #d32f2f;
 }
 
 .actionButton {
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: #ff8800;
+  color: #fff;
   border: none;
   border-radius: 0.375rem;
   font-size: 0.875rem;
@@ -92,7 +94,7 @@
 }
 
 .actionButton:hover {
-  background-color: var(--hover-color);
+  background-color: #ff6600;
 }
 
 .deleteButton {
