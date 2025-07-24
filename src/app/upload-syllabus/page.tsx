@@ -8,28 +8,42 @@ interface Class {
   name: string;
 }
 
+interface Subject {
+  id: number;
+  name: string;
+}
+
 export default function UploadSyllabus() {
   const [classes, setClasses] = useState<Class[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [selectedClass, setSelectedClass] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
   const [lessonName, setLessonName] = useState('');
+  const [lessonOutcomes, setLessonOutcomes] = useState('');
+  const [lessonObjectives, setLessonObjectives] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isGlobalSyllabus, setIsGlobalSyllabus] = useState(true);
 
   useEffect(() => {
-    // Fetch classes
-    fetch('/api/classes')
-      .then((res) => res.json())
-      .then((data) => setClasses(data))
-      .catch((error) => console.error('Error fetching classes:', error));
+    // Fetch classes and subjects in parallel
+    Promise.all([
+      fetch('/api/classes').then(res => res.json()),
+      fetch('/api/teacher-registration/subject-list').then(res => res.json())
+    ])
+      .then(([classesData, subjectsData]) => {
+        setClasses(classesData);
+        setSubjects(subjectsData);
+      })
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedClass || !lessonName || !file) {
-      setMessage('Please fill in all fields');
+    if (!selectedClass || !selectedSubject || !lessonName || !file) {
+      setMessage('Please fill in all required fields');
       setTimeout(() => setMessage(''), 5000);
       return;
     }
@@ -52,6 +66,9 @@ export default function UploadSyllabus() {
     const formData = new FormData();
     formData.append('classId', selectedClass);
     formData.append('lessonName', lessonName);
+    formData.append('subject_id', selectedSubject);
+    formData.append('lessonoutcomes', lessonOutcomes);
+    formData.append('lessonobjectives', lessonObjectives);
     formData.append('file', file);
     formData.append('isForAllSchools', isGlobalSyllabus.toString());
 
@@ -66,7 +83,10 @@ export default function UploadSyllabus() {
       if (response.ok) {
         setMessage('✓ Syllabus uploaded successfully!');
         setSelectedClass('');
+        setSelectedSubject('');
         setLessonName('');
+        setLessonOutcomes('');
+        setLessonObjectives('');
         setFile(null);
         setIsGlobalSyllabus(true);
         setTimeout(() => setMessage(''), 5000);
@@ -95,22 +115,42 @@ export default function UploadSyllabus() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="class">Select Class</label>
-          <select
-            id="class"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-            required
-            className={styles.select}
-          >
-            <option value="">Select a class</option>
-            {classes.map((cls) => (
-              <option key={cls.id} value={cls.id}>
-                {cls.name}
-              </option>
-            ))}
-          </select>
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
+            <label htmlFor="class">Select Class</label>
+            <select
+              id="class"
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              required
+              className={styles.select}
+            >
+              <option value="">Select a class</option>
+              {classes.map((cls) => (
+                <option key={cls.id} value={cls.id}>
+                  {cls.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="subject">Select Subject</label>
+            <select
+              id="subject"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+              required
+              className={styles.select}
+            >
+              <option value="">Select a subject</option>
+              {subjects.map((subject) => (
+                <option key={subject.id} value={subject.id}>
+                  {subject.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className={styles.formGroup}>
@@ -122,6 +162,31 @@ export default function UploadSyllabus() {
             onChange={(e) => setLessonName(e.target.value)}
             required
             className={styles.input}
+            placeholder="Enter lesson name"
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="lessonObjectives">Lesson Objectives</label>
+          <textarea
+            id="lessonObjectives"
+            value={lessonObjectives}
+            onChange={(e) => setLessonObjectives(e.target.value)}
+            className={styles.textarea}
+            placeholder="Enter lesson objectives"
+            rows={3}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="lessonOutcomes">Lesson Outcomes</label>
+          <textarea
+            id="lessonOutcomes"
+            value={lessonOutcomes}
+            onChange={(e) => setLessonOutcomes(e.target.value)}
+            className={styles.textarea}
+            placeholder="Enter expected learning outcomes"
+            rows={3}
           />
         </div>
 

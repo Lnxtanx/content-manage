@@ -1,45 +1,214 @@
 .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  width: 95%;
+  max-width: 1600px;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
 }
-.input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
+
+.input, .formControl {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ffd6a0;
   border-radius: 4px;
+  font-size: 1rem;
+  background-color: #f8f8f8;
+  color: #222;
+  transition: all 0.3s ease;
 }
-.button {
-  padding: 0.5rem 1.2rem;
-  background: #0070f3;
+
+.input:focus, .formControl:focus {
+  border-color: #ff8800;
+  outline: none;
+  box-shadow: 0 0 0 2px #ff880033;
+}
+
+.button, .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: #ff8800;
   color: #fff;
   border: none;
   border-radius: 4px;
+  font-size: 0.875rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin-right: 4px;
 }
-.button:disabled {
-  background: #aaa;
+.button:hover, .btn:hover {
+  background-color: #ff6600;
 }
+
+.button:disabled, .btn:disabled {
+  background-color: #ffcc99;
+  cursor: not-allowed;
+}
+
 .error {
   color: #d32f2f;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
+
 .success {
   color: #388e3c;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
+
 .notificationList {
-  margin-top: 2rem;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  height: 400px;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
+  padding: 0;
 }
+
+.notificationList h2 {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: #f8f4e9;
+  font-weight: 700;
+  color: #333;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #ff8800;
+}
+
 .notificationItem {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e0e0e0;
+  background: #ffffff;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.notificationItem:hover {
+  background-color: #fff5e6;
+}
+
+.notificationItem:last-child {
+  border-bottom: none;
+}
+
+.tableContainer {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  height: 300px;
+  min-height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.addFormSection {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.addFormSection h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.formActions {
+  margin-top: 1rem;
+}
+
+.noData {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.notificationType {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: #fff3e0;
+  color: #ff8800;
+  border: 1px solid #ffd6a0;
+}
+
+.loading {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
 }

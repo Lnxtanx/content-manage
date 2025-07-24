@@ -53,13 +53,23 @@ body {
 /* Main content area */
 .main-content {
   margin-left: 250px;
-  padding: 2rem;
+  padding-top: 70px; /* Adjusted for header height */
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   min-height: calc(100vh - 80px);
   width: calc(100% - 250px);
   -webkit-transform: translate3d(0, 0, 0); /* Hardware acceleration */
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+/* Page content - for pages without container wrappers */
+main {
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 /* Grid layouts with fallbacks */

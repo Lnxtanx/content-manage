@@ -36,24 +36,55 @@ export default function JobPostsPage() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <h1>Job Posts</h1>
+    <>
+      <h1 className={styles.title}>Job Posts</h1>
+      
       {error && <div className={styles.error}>{error}</div>}
-      <div className={styles.jobList}>
-        {jobs.length === 0 && <div>No job posts found.</div>}
-        <ul>
+      
+      {loading ? (
+        <div className={styles.loading}>Loading job posts...</div>
+      ) : jobs.length > 0 ? (
+        <div className={styles.jobList}>
           {jobs.map(job => (
-            <li key={job.id} className={styles.jobItem}>
-              <div><b>Type:</b> {job.type}</div>
-              <div><b>Position:</b> {job.position}</div>
-              <div><b>Qualification:</b> {job.qualification}</div>
-              {job.experience && <div><b>Experience:</b> {job.experience}</div>}
-              {job.additional_message && <div><b>Message:</b> {job.additional_message}</div>}
-              {job.created_at && <div><b>Posted:</b> {new Date(job.created_at).toLocaleString()}</div>}
-            </li>
+            <div key={job.id} className={styles.jobItem}>
+              <div className={styles.jobHeader}>
+                <h2 className={styles.jobPosition}>{job.position}</h2>
+                <span className={styles.jobType}>{job.type}</span>
+              </div>
+              
+              <div className={styles.jobDetails}>
+                <div className={styles.jobDetail}>
+                  <span className={styles.jobDetailLabel}>Qualification:</span>
+                  <span className={styles.jobDetailValue}>{job.qualification}</span>
+                </div>
+                
+                {job.experience && (
+                  <div className={styles.jobDetail}>
+                    <span className={styles.jobDetailLabel}>Experience:</span>
+                    <span className={styles.jobDetailValue}>{job.experience}</span>
+                  </div>
+                )}
+                
+                {job.additional_message && (
+                  <div className={styles.jobDetail}>
+                    <span className={styles.jobDetailLabel}>Additional Information:</span>
+                    <span className={styles.jobDetailValue}>{job.additional_message}</span>
+                  </div>
+                )}
+                
+                <div className={styles.jobPostedAt}>
+                  <span className={styles.jobDetailLabel}>Posted:</span>
+                  <span className={styles.jobDate}>
+                    {job.created_at ? new Date(job.created_at).toLocaleString() : ""}
+                  </span>
+                </div>
+              </div>
+            </div>
           ))}
-        </ul>
-      </div>
-    </div>
+        </div>
+      ) : (
+        <div className={styles.noData}>No job posts available.</div>
+      )}
+    </>
   );
 }

@@ -2,12 +2,70 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import AWS from 'aws-sdk';
 
+// Configure this route as dynamic
+export const dynamic = 'force-dynamic';
+
 // Set up AWS SDK
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION,
 });
+
+// PUT endpoint to update lesson details
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const lessonId = parseInt(params.id);
+    
+    if (isNaN(lessonId)) {
+      return NextResponse.json({ error: 'Invalid lesson ID' }, { status: 400 });
+    }
+    
+    // Get data from the request body
+    const data = await request.json();
+    const { lessonName, lessonoutcomes, lessonobjectives } = data;
+    
+    // Check if the lesson exists first
+    const existingLesson = await prisma.lessonPdf.findUnique({
+      where: { id: lessonId }
+    });
+    
+    if (!existingLesson) {
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
+    }
+    
+    // Create a properly typed update object
+    const updateData: any = {
+      lessonName,
+      updatedAt: new Date(),
+    };
+    
+    // Only add these fields if they are provided
+    if (lessonoutcomes !== undefined) {
+      updateData.lessonoutcomes = lessonoutcomes;
+    }
+    
+    if (lessonobjectives !== undefined) {
+      updateData.lessonobjectives = lessonobjectives;
+    }
+    
+    // Update the lesson in the database
+    const updatedLesson = await prisma.lessonPdf.update({
+      where: {
+        id: lessonId,
+      },
+      data: updateData,
+    });
+    
+    return NextResponse.json({ 
+      message: 'Lesson updated successfully', 
+      data: updatedLesson 
+    });
+  } catch (error) {
+    console.error('Error updating lesson:', error);
+    return NextResponse.json({ error: 'Failed to update lesson' }, { status: 500 });
+  }
+}
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {

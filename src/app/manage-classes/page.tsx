@@ -60,8 +60,8 @@ export default function ManageClasses() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.header}>Manage Classes</h1>
+    <>
+      <h1 className={styles.title}>Manage Classes</h1>
       
       {message && (
         <div className={`${styles.message} ${message.includes('✓') ? styles.success : styles.error}`}>
@@ -69,43 +69,55 @@ export default function ManageClasses() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
-          <label htmlFor="className">New Class Name</label>
-          <input
-            type="text"
-            id="className"
-            className={styles.formControl}
-            value={newClassName}
-            onChange={(e) => setNewClassName(e.target.value)}
-            required
-            placeholder="Enter class name (e.g., Class 1, Class 2)"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className={`${styles.btn} ${loading ? styles.loading : ''}`}
-          disabled={loading}
-        >
-          {loading ? 'Creating...' : 'Create Class'}
-        </button>
-      </form>
-
-      <div className={styles.classesContainer}>
-        <h2>Existing Classes</h2>
-        {classes.length > 0 ? (
-          <ul className={styles.classList}>
-            {classes.map((cls) => (
-              <li key={cls.id} className={styles.classItem}>
-                {cls.name}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className={styles.noClasses}>No classes found.</p>
-        )}
+      <div className={styles.addFormSection}>
+        <h2>Add New Class</h2>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label htmlFor="className">Class Name</label>
+            <input
+              type="text"
+              id="className"
+              className={styles.formControl}
+              value={newClassName}
+              onChange={(e) => setNewClassName(e.target.value)}
+              required
+              placeholder="Enter class name (e.g., Class 1, Class 2)"
+            />
+          </div>
+          <div className={styles.formActions}>
+            <button
+              type="submit"
+              className={`${styles.btn} ${loading ? styles.loading : ''}`}
+              disabled={loading}
+            >
+              {loading ? 'Creating...' : 'Create Class'}
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+
+      {loading ? (
+        <div className={styles.loading}>Loading classes...</div>
+      ) : classes.length > 0 ? (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th style={{width: '100%'}}>Class Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {classes.map((cls) => (
+                <tr key={cls.id}>
+                  <td className={styles.nameCell}>{cls.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className={styles.noData}>No classes available.</div>
+      )}
+    </>
   );
 }

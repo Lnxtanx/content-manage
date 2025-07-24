@@ -1,17 +1,21 @@
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 1rem;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 6px #ff88001a;
-  border: 1px solid #ffd6a0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
 .title {
   font-size: 1.5rem;
-  color: #ff8800;
-  margin-bottom: 2rem;
-  text-align: center;
+  color: #333;
+  margin: 1rem 0 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  width: 95%;
+  max-width: 1600px;
 }
 .formGroup label {
   display: block;
@@ -35,23 +39,35 @@
   box-shadow: 0 0 0 2px #ff880033;
 }
 .tableContainer {
-  background: #fff7ef;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px #ff88001a;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
-  border: 1px solid #ffd6a0;
+  border: 1px solid #e0e0e0;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
 }
 .table th,
 .table td {
-  padding: 1rem;
+  padding: 0.5rem 0.6rem;
   text-align: left;
-  border-bottom: 1px solid #ffd6a0;
+  border-bottom: 1px solid #e0e0e0;
   color: #222;
+  white-space: nowrap;
+  height: 38px;
 }
 .table th {
-  background: #fff3e0;
-  font-weight: 600;
-  color: #ff8800;
+  background: #f8f4e9;
+  font-weight: 700;
+  color: #333;
+  height: 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #ff8800;
 }
 .table tr:last-child td {
   border-bottom: none;
@@ -76,39 +92,216 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  justify-content: center;
+  padding: 0.3rem 0.5rem;
   background-color: #ff8800;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
+  margin-right: 4px;
+  min-width: 40px;
 }
 .btn:hover {
   background-color: #ff6600;
-  transform: translateY(-1px);
 }
 .loading {
   text-align: center;
   color: #aaa;
   padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  margin: 0 auto;
 }
 .noData {
   text-align: center;
   color: #aaa;
   padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  margin: 0 auto;
 }
 .deleteBtn {
   background-color: #d32f2f;
   color: #fff;
-  padding: 5px 10px;
-  margin-left: 10px;
-  cursor: pointer;
   border: none;
   border-radius: 4px;
 }
 .deleteBtn:hover {
   background-color: #b91c1c;
+}
+
+.editBtn {
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+.editBtn:hover {
+  background-color: #0b7dda;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+.filterSection {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  width: 95%;
+  max-width: 1600px;
+}
+.filterItem {
+  flex: 1;
+  min-width: 200px;
+}
+.filterButton {
+  background-color: #ff8800;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  align-self: flex-end;
+}
+.filterButton:hover {
+  background-color: #ff6600;
+}
+.clearButton {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.clearButton:hover {
+  background-color: #f1f1f1;
+}
+.textCellContent {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+.textCellContent:hover {
+  white-space: normal;
+  overflow: visible;
+  background-color: #fff;
+  position: absolute;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  min-width: 200px;
+  max-width: 350px;
+}
+
+/* Modal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  color: #333;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cancelBtn {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.saveBtn {
+  background-color: #2196f3;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.saveBtn:disabled {
+  background-color: #a5d6ff;
+  cursor: not-allowed;
+}
+
+.modal .formGroup {
+  padding: 0.5rem 1rem;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }

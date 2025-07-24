@@ -79,6 +79,12 @@ export async function GET() {
         email: true,
         isActive: true,
         createdAt: true,
+        updatedAt: true,
+        logo: true,
+        address: true,
+        principal_name: true,
+        location: true,
+        school_address: true,
         _count: {
           select: {
             teachers: true,

@@ -1,56 +1,247 @@
 .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  width: 95%;
+  max-width: 1600px;
 }
 .form {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
 }
-.input {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
+.formControl {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ffd6a0;
   border-radius: 4px;
+  font-size: 1rem;
+  background-color: #f8f8f8;
+  color: #222;
+  transition: all 0.3s ease;
 }
-.button {
-  padding: 0.5rem 1.2rem;
-  background: #0070f3;
+.formControl:focus {
+  border-color: #ff8800;
+  outline: none;
+  box-shadow: 0 0 0 2px #ff880033;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: #ff8800;
   color: #fff;
   border: none;
   border-radius: 4px;
+  font-size: 0.875rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin-right: 4px;
 }
-.button:disabled {
-  background: #aaa;
+.btn:hover {
+  background-color: #ff6600;
 }
+.btn:disabled {
+  background-color: #ffcc99;
+  cursor: not-allowed;
+}
+
 .error {
   color: #d32f2f;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
+
 .success {
   color: #388e3c;
   margin-bottom: 1rem;
-}
-.subjectList {
-  margin-top: 2rem;
-}
-.subjectItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
-}
-.deleteButton {
-  background: #d32f2f;
-  color: #fff;
-  border: none;
+  padding: 0.75rem;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
   border-radius: 4px;
-  padding: 0.3rem 0.8rem;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.tableContainer {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  /* Increased height to show at least 4 rows */
+  height: 300px;
+  min-height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  color: #222;
+  /* Increased row height */
+  height: 60px;
+}
+
+.table th {
+  background: #f8f4e9;
+  font-weight: 700;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #ff8800;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.deleteBtn {
+  background-color: #d32f2f;
+  color: #fff;
+  min-width: 80px;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+}
+
+.deleteBtn:hover {
+  background-color: #b91c1c;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.filterSection {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.filterItem {
+  flex: 1;
+  min-width: 200px;
+}
+
+.clearButton {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background-color: #f1f1f1;
+}
+
+.loading {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  margin: 0 auto;
+}
+
+.noData {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  margin: 0 auto;
+}
+
+.addFormSection {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.addFormSection h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.formActions {
+  margin-top: 1rem;
+}
+
+/* Style for the table cells and specifically the name cell */
+.nameCell {
+  font-weight: 500;
+  color: #111;
+}
+
+/* Add hover effect to table rows */
+.table tr:hover {
+  background-color: #fff5e6;
 }

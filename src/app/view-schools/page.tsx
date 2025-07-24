@@ -93,7 +93,14 @@ export default function ViewSchools() {
   });
 
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Registered Schools</h1>
+        </div>
+        <div className={styles.loading}>Loading...</div>
+      </div>
+    );
   }
 
   return (
@@ -104,6 +111,8 @@ export default function ViewSchools() {
           Add New School
         </Link>
       </div>
+      {deleteMessage && <div className={styles.success}>{deleteMessage}</div>}
+      {error && <div className={styles.error}>{error}</div>}
       <div className={styles.filters}>
         <input
           type="text"
@@ -123,54 +132,90 @@ export default function ViewSchools() {
           ))}
         </select>
       </div>
-      {deleteMessage && <div className={styles.success}>{deleteMessage}</div>}
-      {error && <div className={styles.error}>{error}</div>}
-      <div className={styles.schoolsList}>
-        {filteredSchools.length === 0 && <div>No schools found.</div>}
-        {filteredSchools.map((school) => (
-          <div key={school.id} className={styles.schoolCard}>
-            <div className={styles.schoolCardHeader}>
-              {school.logo && <img src={school.logo} alt="Logo" className={styles.schoolLogo} />}
-              <div>
-                <h2 className={styles.schoolName}>{school.name}</h2>
-                <span className={`${styles.status} ${school.isActive ? styles.active : styles.inactive}`}>
-                  {school.isActive ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-            </div>
-            <ul className={styles.schoolDetailsList}>
-              <li><b>ID:</b> {school.id}</li>
-              <li><b>Email:</b> {school.email}</li>
-              <li><b>Principal Name:</b> {school.principal_name || '-'}</li>
-              <li><b>Address:</b> {school.address || '-'}</li>
-              <li><b>School Address:</b> {school.school_address || '-'}</li>
-              <li><b>State:</b> {school.location || '-'}</li>
-              <li><b>Teachers:</b> {school._count.teachers}</li>
-              <li><b>Created At:</b> {new Date(school.createdAt).toLocaleString()}</li>
-              <li><b>Updated At:</b> {new Date(school.updatedAt).toLocaleString()}</li>
-            </ul>
-            <div className={styles.actionsRow}>
-              <Link 
-                href={`/add-teacher?schoolId=${school.id}`} 
-                className={styles.actionButton}
-              >
-                Add Teacher
-              </Link>
-              <Link 
-                href={`/view-teachers?schoolId=${school.id}`} 
-                className={styles.actionButton}
-              >
-                View Teachers
-              </Link>
-              <button 
-                onClick={() => handleDelete(school.id)}
-                className={styles.deleteButton}
-              >
-                <FaTrash /> Delete
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Principal Name</th>
+              <th>Address</th>
+              <th>School Address</th>
+              <th>Location</th>
+              <th>Teachers Count</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredSchools.length === 0 ? (
+              <tr>
+                <td colSpan={13} style={{ textAlign: 'center', padding: '1rem' }}>
+                  No schools found.
+                </td>
+              </tr>
+            ) : (
+              filteredSchools.map((school) => (
+                <tr key={school.id}>
+                  <td>
+                    {school.logo ? (
+                      <img 
+                        src={school.logo} 
+                        alt="Logo" 
+                        className={styles.schoolLogoSmall} 
+                      />
+                    ) : (
+                      <span>-</span>
+                    )}
+                  </td>
+                  <td>{school.id}</td>
+                  <td>{school.name}</td>
+                  <td>{school.email}</td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${school.isActive ? styles.active : styles.inactive}`}>
+                      {school.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td>{school.principal_name || '-'}</td>
+                  <td>{school.address || '-'}</td>
+                  <td>{school.school_address || '-'}</td>
+                  <td>{school.location || '-'}</td>
+                  <td>{school._count?.teachers ?? 0}</td>
+                  <td>{new Date(school.createdAt).toLocaleString()}</td>
+                  <td>{new Date(school.updatedAt).toLocaleString()}</td>
+                  <td className={styles.actionColumn}>
+                    <Link 
+                      href={`/add-teacher?schoolId=${school.id}`} 
+                      className={styles.actionIcon}
+                      title="Add Teacher"
+                    >
+                      <FaEdit />
+                    </Link>
+                    <Link 
+                      href={`/view-teachers?schoolId=${school.id}`} 
+                      className={styles.actionIcon}
+                      title="View Teachers"
+                    >
+                      👥
+                    </Link>
+                    <button 
+                      onClick={() => handleDelete(school.id)}
+                      className={styles.deleteIcon}
+                      title="Delete School"
+                      type="button"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

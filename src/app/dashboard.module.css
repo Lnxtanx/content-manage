@@ -1,8 +1,24 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background: var(--background-color);
+  position: relative;
+  overflow: hidden; /* Ensure the background doesn't spill */
+}
+
+.logoContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0 4rem 0;
+  padding: 0 2rem;
+}
+
+.logo {
+  max-width: 60%;
+  height: auto;
 }
 
 .header {
@@ -84,7 +100,7 @@
 }
 
 .statsContainer {
-  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .statsCard {
@@ -93,7 +109,7 @@
   padding: 2.2rem 1.5rem;
   box-shadow: 0 2px 16px 0 #ff88001a;
   border: 1.5px solid var(--border-color);
-  max-width: 500px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -103,12 +119,21 @@
   font-size: 1.18rem;
   font-weight: 600;
   letter-spacing: -0.5px;
+  text-align: center;
 }
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.loading {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 1rem;
 }
 
 .statItem {
@@ -139,15 +164,17 @@
 }
 
 .cautionBanner {
-  background: linear-gradient(90deg, #fff3e0 60%, #ffe0b2 100%);
-  border: 2px solid #ff8800;
-  border-radius: 10px;
-  padding: 1.7rem 1.2rem;
-  margin-bottom: 2.2rem;
+  background: linear-gradient(90deg, #fff3e0 30%, #ffe0b2 100%);
+  border-bottom: 1px solid #ff8800;
+  padding: 0.8rem 2rem;
+  margin-bottom: 6rem;
   animation: pulse 2s infinite;
-  box-shadow: 0 2px 16px 0 #ff88001a;
+  box-shadow: 0 2px 8px 0 #ff88001a;
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
 }
 
 .cautionContent {
@@ -158,17 +185,19 @@
 
 .cautionContent h2 {
   color: #ff8800;
-  font-size: 1.18rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
+  margin: 0;
 }
 
 .cautionContent p {
   color: var(--text-color);
-  line-height: 1.6;
-  font-size: 1.01rem;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0 0;
 }
 
 .cautionContent strong {

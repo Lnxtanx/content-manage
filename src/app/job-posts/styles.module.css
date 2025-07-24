@@ -1,20 +1,153 @@
 .container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  width: 95%;
+  max-width: 1600px;
+}
+
 .error {
   color: #d32f2f;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
-.jobList {
-  margin-top: 2rem;
-}
-.jobItem {
-  padding: 1rem 0;
-  border-bottom: 1px solid #eee;
+
+.success {
+  color: #388e3c;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.jobList {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  height: 500px;
+  min-height: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.jobItem {
+  padding: 1.25rem;
+  border-bottom: 1px solid #e0e0e0;
+  background: #ffffff;
+  transition: all 0.2s;
+}
+
+.jobItem:hover {
+  background-color: #fff5e6;
+}
+
+.jobItem:last-child {
+  border-bottom: none;
+}
+
+.jobHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.jobPosition {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.jobType {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: #fff3e0;
+  color: #ff8800;
+  border: 1px solid #ffd6a0;
+}
+
+.jobDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.jobDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.jobDetailLabel {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.jobDetailValue {
+  color: #333;
+}
+
+.jobPostedAt {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.jobDate {
+  font-weight: 400;
+  color: #666;
+}
+
+.noData {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.loading {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
 }

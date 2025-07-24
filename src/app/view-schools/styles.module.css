@@ -1,9 +1,11 @@
 .container {
-  padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
-  color: #222;
+  margin: 2rem auto;
+  padding: 1rem;
   background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
 }
 
 .header {
@@ -14,31 +16,48 @@
 }
 
 .title {
-  color: #ff8800;
-  margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin: 1rem 0 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  width: 95%;
+  max-width: 1600px;
 }
 
 .addButton {
-  background: #ff8800;
-  color: white;
-  padding: 0.75rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: #ff8800;
+  color: #fff;
+  border: none;
   border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   text-decoration: none;
   font-weight: 500;
-  border: none;
 }
 
 .addButton:hover {
-  background: #ff6600;
+  background-color: #ff6600;
 }
 
 .tableContainer {
-  background: #fff7ef;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px #ff88001a;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
-  border: 1px solid #ffd6a0;
+  border: 1px solid #e0e0e0;
+  height: 500px;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 95%;
+  max-width: 1600px;
 }
 
 .table {
@@ -48,16 +67,149 @@
 
 .table th,
 .table td {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   text-align: left;
-  border-bottom: 1px solid #ffd6a0;
+  border-bottom: 1px solid #e0e0e0;
   color: #222;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  height: 60px;
+}
+
+.table td:nth-child(7),
+.table td:nth-child(8) {
+  max-width: 250px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .table th {
-  background: #fff3e0;
+  background: #f8f4e9;
+  font-weight: 700;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #ff8800;
+}
+
+.table tbody tr:hover {
+  background-color: #fff5e6;
+}
+
+.filterSection {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  width: 95%;
+  max-width: 1600px;
+}
+
+.filterItem {
+  flex: 1;
+  min-width: 200px;
+}
+
+.formControl {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ffd6a0;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #f8f8f8;
+  color: #222;
+  transition: all 0.3s ease;
+}
+
+.formControl:focus {
+  border-color: #ff8800;
+  outline: none;
+  box-shadow: 0 0 0 2px #ff880033;
+}
+
+.clearButton {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
   font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background-color: #f1f1f1;
+}
+
+.schoolLogoSmall {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.active {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.inactive {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.actionColumn {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.actionIcon {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: #fff3e0;
   color: #ff8800;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.actionIcon:hover {
+  background: #ffe0b2;
+  color: #f57c00;
+}
+
+.deleteIcon {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.deleteIcon:hover {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .status {
@@ -116,28 +268,58 @@
 }
 
 .success {
-  color: var(--success-text);
-  background: var(--success-background);
-  padding: 0.75rem;
-  border-radius: 0.375rem;
+  color: #388e3c;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
 
 .error {
-  color: var(--error-text);
-  background: var(--error-background);
-  padding: 0.75rem;
-  border-radius: 0.375rem;
+  color: #d32f2f;
   margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  width: 95%;
+  max-width: 1600px;
 }
 
 .loading {
-  color: var(--text-color);
   text-align: center;
+  color: #aaa;
   padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
 }
 
-/* Table row hover effect */
-.table tbody tr:hover {
-  background-color: var(--secondary-background);
+.noData {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+/* Add hover effect to table rows */
+.table tr:hover {
+  background-color: #fff5e6;
+}
+
+/* Style for the table cells and specifically the name cell */
+.nameCell {
+  font-weight: 500;
+  color: #111;
 }

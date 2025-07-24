@@ -1,12 +1,14 @@
 'use client';
 
+import { memo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { memoryOptimizer, performanceMonitor } from '@/lib/performance-optimizer';
 import { 
   FaSchool, 
   FaChalkboardTeacher, 
   FaUserPlus, 
-  FaUsers,
   FaBook,
   FaUpload,
   FaList,
@@ -73,35 +75,127 @@ const navItems = [
   },
 ];
 
-export default function Navigation() {
+// Memoized NavLink component for better performance
+const NavLink = memo(({ 
+  href, 
+  isActive, 
+  icon, 
+  label 
+}: { 
+  href: string; 
+  isActive: boolean; 
+  icon: React.ReactNode; 
+  label: string;
+}) => {
+  return (
+    <li>
+      <Link
+        href={href}
+        className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+        prefetch={false} // Disable prefetching for less important routes
+      >
+        <span className={styles.icon}>{icon}</span>
+        {label}
+      </Link>
+    </li>
+  );
+});
+
+NavLink.displayName = 'NavLink';
+
+function Navigation() {
   const pathname = usePathname();
 
+  // Refresh connection monitor
+  useEffect(() => {
+    performanceMonitor.start('navigation-render');
+    
+    // Monitor network status for potential refresh
+    const handleOnline = () => {
+      console.log('Connection restored');
+    };
+    
+    const handleOffline = () => {
+      console.log('Connection lost, waiting to restore...');
+    };
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    // Implement memory optimization for this component
+    memoryOptimizer.trackObject(navItems, { 
+      type: 'navigation',
+      component: 'Navigation'
+    });
+    
+    performanceMonitor.end('navigation-render');
+    
+    // Clean up event listeners
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+  
+  // Auto-refresh on critical errors
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (
+        event.error?.toString().includes('ChunkLoadError') || 
+        event.error?.toString().includes('Loading chunk') ||
+        event.error?.toString().includes('Failed to fetch dynamically imported module')
+      ) {
+        console.error('Critical navigation error, refreshing application...');
+        // Wait a moment before refreshing
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    };
+    
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
   return (
-    <nav className={styles.nav}>
-      <div className={styles.logoRow}>
-        <div className={styles.logo}>
-          <FaGraduationCap size={24} />
-          <span>Management system </span>
+    <>
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerLogo}>
+            <FaGraduationCap size={24} />
+            <span>Sportal Foundation</span>
+          </div>
+          <div className={styles.headerRight}>
+            <div className={styles.notificationSection}>
+              <span className={styles.notificationLabel}>Notifications</span>
+              <Link href="/notifications" className={styles.notificationIcon} title="Notifications">
+                <FaBell size={22} />
+              </Link>
+            </div>
+          </div>
         </div>
-        <Link href="/notifications" className={styles.notificationIcon} title="Notifications">
-          <FaBell size={22} />
-        </Link>
-      </div>
-      <ul className={styles.navList}>
-        {navItems.map((item) => (
-          <li key={item.href}>
-            <Link
+      </header>
+
+      <nav className={styles.nav}>
+        <div className={styles.logoRow}>
+          <Link href="/" className={styles.logo}>
+            <FaGraduationCap size={24} />
+            <span>Admin system </span>
+          </Link>
+        </div>
+        <ul className={styles.navList}>
+          {navItems.map((item) => (
+            <NavLink
+              key={item.href}
               href={item.href}
-              className={`${styles.navLink} ${
-                pathname === item.href ? styles.active : ''
-              }`}
-            >
-              <span className={styles.icon}>{item.icon}</span>
-              {item.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+              isActive={pathname === item.href}
+              icon={item.icon}
+              label={item.label}
+            />
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }
+
+// Use memo to prevent unnecessary re-renders
+export default memo(Navigation);

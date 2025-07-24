@@ -8,28 +8,31 @@ datasource db {
 }
 
 model Teacher {
-  id               Int                @id @default(autoincrement())
-  schoolId         Int
-  teacherName      String             @db.VarChar(100)
-  dob              DateTime           @db.Timestamp(6)
-  email            String             @unique @db.VarChar(255)
-  password         String             @db.VarChar(255)
-  profileImage     String?            @db.VarChar(1000)
-  qualification    String?            @db.VarChar(100)
-  experienceYears  Int?
-  status           String             @default("active") @db.VarChar(20)
-  createdAt        DateTime           @default(now()) @db.Timestamp(6)
-  updatedAt        DateTime           @db.Timestamp(6)
-  subject_id       Int?
-  phone_number     String?            @db.VarChar(20)
-  aadhaar_number   String?            @unique @db.VarChar(12)
-  ClassResponse    ClassResponse[]
-  EventApplication EventApplication[]
-  LeaveApplication LeaveApplication[]
-  LessonLog        LessonLog[]
-  schools          schools            @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher_school")
-  subject          subject?           @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_teacher_subject")
-  timetables       Timetable[]
+  id                    Int                     @id @default(autoincrement())
+  schoolId              Int
+  teacherName           String                  @db.VarChar(100)
+  dob                   DateTime                @db.Timestamp(6)
+  email                 String                  @unique @db.VarChar(255)
+  password              String                  @db.VarChar(255)
+  profileImage          String?                 @db.VarChar(1000)
+  qualification         String?                 @db.VarChar(100)
+  experienceYears       Int?
+  status                String                  @default("active") @db.VarChar(20)
+  createdAt             DateTime                @default(now()) @db.Timestamp(6)
+  updatedAt             DateTime                @db.Timestamp(6)
+  subject_id            Int?
+  phone_number          String?                 @db.VarChar(20)
+  aadhaar_number        String?                 @unique @db.VarChar(12)
+  assignedclasses       String[]                @default([]) @db.VarChar(100)
+  assignedsections      String[]                @default([]) @db.VarChar(10)
+  ClassResponse         ClassResponse[]
+  EventApplication      EventApplication[]
+  LeaveApplication      LeaveApplication[]
+  LessonLog             LessonLog[]
+  teacher_class_subject teacher_class_subject[]
+  schools               schools                 @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher_school")
+  subject               subject?                @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_teacher_subject")
+  timetables            Timetable[]
 
   @@index([email])
   @@index([schoolId])
@@ -52,10 +55,11 @@ model Timetable {
 }
 
 model Class {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique @db.VarChar
-  LessonLog LessonLog[]
-  LessonPdf LessonPdf[]
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique @db.VarChar
+  LessonLog             LessonLog[]
+  LessonPdf             LessonPdf[]
+  teacher_class_subject teacher_class_subject[]
 }
 
 model ClassResponse {
@@ -111,18 +115,20 @@ model LessonLog {
 }
 
 model LessonPdf {
-  id              Int      @id @default(autoincrement())
-  classId         Int
-  lessonName      String   @db.VarChar
-  pdfUrl          String
-  schoolId        Int?
-  isForAllSchools Boolean  @default(false)
-  createdAt       DateTime @default(now()) @db.Timestamp(6)
-  updatedAt       DateTime @default(now()) @db.Timestamp(6)
-  subject_id      Int?
-  Class           Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_class")
-  schools         schools? @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_school")
-  subject         subject? @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_subject")
+  id               Int      @id @default(autoincrement())
+  classId          Int
+  lessonName       String   @db.VarChar
+  pdfUrl           String
+  schoolId         Int?
+  isForAllSchools  Boolean  @default(false)
+  createdAt        DateTime @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime @default(now()) @db.Timestamp(6)
+  subject_id       Int?
+  lessonoutcomes   String?
+  lessonobjectives String?
+  Class            Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_class")
+  schools          schools? @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lessonpdf_school")
+  subject          subject? @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_subject")
 
   @@index([classId])
   @@index([schoolId])
@@ -201,9 +207,22 @@ model notification {
 }
 
 model subject {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique @db.VarChar(100)
-  code      String?     @db.VarChar(20)
-  LessonPdf LessonPdf[]
-  teachers  Teacher[]
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique @db.VarChar(100)
+  code                  String?                 @db.VarChar(20)
+  LessonPdf             LessonPdf[]
+  teacher_class_subject teacher_class_subject[]
+  teachers              Teacher[]
+}
+
+model teacher_class_subject {
+  id         Int     @id @default(autoincrement())
+  teacher_id Int
+  class_id   Int
+  subject_id Int
+  Class      Class   @relation(fields: [class_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_class")
+  subject    subject @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_subject")
+  teachers   Teacher @relation(fields: [teacher_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher")
+
+  @@unique([teacher_id, class_id, subject_id])
 }

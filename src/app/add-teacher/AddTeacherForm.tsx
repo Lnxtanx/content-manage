@@ -13,6 +13,11 @@ interface Subject {
   name: string;
 }
 
+interface Class {
+  id: number;
+  name: string;
+}
+
 interface AddTeacherFormProps {
   initialSchools: School[];
 }
@@ -22,6 +27,11 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
   const searchParams = useSearchParams();
   const initialSchoolId = searchParams.get('schoolId');
 
+  interface SubjectClassMapping {
+    subjectId: number;
+    classIds: number[];
+  }
+
   const [formData, setFormData] = useState({
     schoolId: initialSchoolId || '',
     teacherName: '',
@@ -29,22 +39,32 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     email: '',
     password: '',
     qualification: '',
-    subject_id: '',
     experienceYears: '',
     phone_number: '',
     aadhaar_number: '',
     status: 'active',
+    sections: [] as string[],
+    subjectClassMappings: [] as SubjectClassMapping[],
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Fetch subjects
     fetch('/api/teacher-registration/subject-list')
       .then(res => res.json())
       .then(data => setSubjects(data))
       .catch(() => setSubjects([]));
+    
+    // Fetch classes
+    fetch('/api/classes')
+      .then(res => res.json())
+      .then(data => setClasses(data))
+      .catch(() => setClasses([]));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,8 +72,22 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
     setError('');
     setLoading(true);
 
-    if (!formData.subject_id) {
-      setError('Please select a subject');
+    if (formData.subjectClassMappings.length === 0) {
+      setError('Please select at least one subject and its corresponding classes');
+      setLoading(false);
+      return;
+    }
+
+    // Check if at least one class is selected for each subject
+    const hasEmptyClasses = formData.subjectClassMappings.some(mapping => mapping.classIds.length === 0);
+    if (hasEmptyClasses) {
+      setError('Please select at least one class for each selected subject');
+      setLoading(false);
+      return;
+    }
+    
+    if (formData.sections.length === 0) {
+      setError('Please select at least one section');
       setLoading(false);
       return;
     }
@@ -75,7 +109,43 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
       data.append('email', formData.email);
       data.append('password', formData.password);
       data.append('qualification', formData.qualification);
-      data.append('subject_id', formData.subject_id);
+      
+      // Log the subject-class mappings for debugging
+      console.log("Subject-class mappings to send:", formData.subjectClassMappings);
+      
+      // Append subject-class mappings more explicitly for better FormData handling
+      formData.subjectClassMappings.forEach((mapping, index) => {
+        data.append(`subjectClassMappings[${index}][subjectId]`, mapping.subjectId.toString());
+        
+        // For each class ID, create a separate entry with unique key
+        if (mapping.classIds && mapping.classIds.length > 0) {
+          mapping.classIds.forEach((classId, classIndex) => {
+            data.append(`subjectClassMappings[${index}][classIds][${classIndex}]`, classId.toString());
+          });
+        }
+      });
+      
+      // Get all unique class IDs for the teacher table
+      const allClassIds = Array.from(new Set(
+        formData.subjectClassMappings.flatMap(mapping => mapping.classIds)
+      ));
+
+      // Get all subject IDs for the teacher table
+      const allSubjectIds = formData.subjectClassMappings.map(mapping => mapping.subjectId);
+
+      // Convert class IDs to class names for the teacher table
+      const classNames = allClassIds.map(id => 
+        classes.find(c => c.id === id)?.name || ''
+      ).filter(Boolean);
+
+      // Add each class ID separately for the backend
+      allClassIds.forEach(classId => {
+        data.append('assignedclasses[]', classId.toString());
+      });
+      
+      formData.sections.forEach(section => {
+        data.append('sections[]', section);
+      });
       data.append('experienceYears', formData.experienceYears);
       data.append('phone_number', formData.phone_number);
       data.append('aadhaar_number', formData.aadhaar_number);
@@ -207,20 +277,92 @@ export default function AddTeacherForm({ initialSchools }: AddTeacherFormProps) 
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="subject_id">Subject</label>
-          <select
-            id="subject_id"
-            name="subject_id"
-            value={formData.subject_id}
-            onChange={handleChange}
-            required
-            className={styles.select}
-          >
-            <option value="">Select a subject</option>
+          <label>Subjects and Classes</label>
+          <div className={styles.checkboxGroup}>
             {subjects.map((subject) => (
-              <option key={subject.id} value={subject.id}>{subject.name}</option>
+              <div key={subject.id} className={styles.subjectGroup}>
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    checked={selectedSubjects.includes(subject.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedSubjects(prev => [...prev, subject.id]);
+                        setFormData(prev => ({
+                          ...prev,
+                          subjectClassMappings: [
+                            ...prev.subjectClassMappings,
+                            { subjectId: subject.id, classIds: [] }
+                          ]
+                        }));
+                      } else {
+                        setSelectedSubjects(prev => prev.filter(id => id !== subject.id));
+                        setFormData(prev => ({
+                          ...prev,
+                          subjectClassMappings: prev.subjectClassMappings.filter(
+                            mapping => mapping.subjectId !== subject.id
+                          )
+                        }));
+                      }
+                    }}
+                    className={styles.checkbox}
+                  />
+                  {subject.name}
+                </label>
+                {selectedSubjects.includes(subject.id) && (
+                  <div className={styles.classesSubGroup}>
+                    <label>Select classes for {subject.name}:</label>
+                    <div className={styles.classCheckboxes}>
+                      {classes.map((cls) => (
+                        <label key={cls.id} className={styles.checkboxLabel}>
+                          <input
+                            type="checkbox"
+                            checked={formData.subjectClassMappings
+                              .find(mapping => mapping.subjectId === subject.id)
+                              ?.classIds.includes(cls.id) || false}
+                            onChange={(e) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                subjectClassMappings: prev.subjectClassMappings.map(mapping =>
+                                  mapping.subjectId === subject.id
+                                    ? {
+                                        ...mapping,
+                                        classIds: e.target.checked
+                                          ? [...mapping.classIds, cls.id]
+                                          : mapping.classIds.filter(id => id !== cls.id)
+                                      }
+                                    : mapping
+                                )
+                              }));
+                            }}
+                            className={styles.checkbox}
+                          />
+                          {cls.name}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
-          </select>
+          </div>
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="sections">Sections</label>
+          <input
+            type="text"
+            id="sections"
+            value={formData.sections.join(', ')}
+            onChange={(e) => {
+              const sections = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+              setFormData(prev => ({
+                ...prev,
+                sections
+              }));
+            }}
+            placeholder="Enter sections separated by commas (e.g., A, B, C)"
+            className={styles.input}
+          />
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="experienceYears">Years of Experience</label>

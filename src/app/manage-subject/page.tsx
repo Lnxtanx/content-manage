@@ -15,6 +15,8 @@ export default function ManageSubject() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [filteredSubjects, setFilteredSubjects] = useState<Subject[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchSubjects = async () => {
     setLoading(true);
@@ -22,6 +24,7 @@ export default function ManageSubject() {
       const res = await fetch("/api/manage-subject");
       const data = await res.json();
       setSubjects(data);
+      setFilteredSubjects(data);
     } catch (err: any) {
       setError("Failed to fetch subjects");
     } finally {
@@ -32,6 +35,19 @@ export default function ManageSubject() {
   useEffect(() => {
     fetchSubjects();
   }, []);
+  
+  // Filter subjects when search term changes
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = subjects.filter(subject => 
+        subject.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        (subject.code && subject.code.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      setFilteredSubjects(filtered);
+    } else {
+      setFilteredSubjects(subjects);
+    }
+  }, [searchTerm, subjects]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,44 +94,110 @@ export default function ManageSubject() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Manage Subjects</h1>
-      <form onSubmit={handleAdd} className={styles.form}>
-        <input
-          type="text"
-          placeholder="Subject Name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className={styles.input}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Subject Code (optional)"
-          value={code}
-          onChange={e => setCode(e.target.value)}
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Saving..." : "Add Subject"}
-        </button>
-      </form>
+    <>
+      <h1 className={styles.title}>Manage Subjects</h1>
+
+      <div className={styles.filterSection}>
+        <div className={styles.filterItem}>
+          <label htmlFor="search">Search Subjects</label>
+          <input
+            type="text"
+            id="search"
+            placeholder="Search by name or code..."
+            className={styles.formControl}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <div className={styles.filterItem} style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <button 
+            className={styles.clearButton} 
+            onClick={() => setSearchTerm('')}
+            style={{ marginTop: '1.5rem' }}
+          >
+            Clear Search
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.addFormSection}>
+        <h2>Add New Subject</h2>
+        <form onSubmit={handleAdd} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label htmlFor="subjectName">Subject Name</label>
+            <input
+              id="subjectName"
+              type="text"
+              placeholder="Enter subject name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className={styles.formControl}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="subjectCode">Subject Code (optional)</label>
+            <input
+              id="subjectCode"
+              type="text"
+              placeholder="Enter subject code"
+              value={code}
+              onChange={e => setCode(e.target.value)}
+              className={styles.formControl}
+            />
+          </div>
+          <div className={styles.formActions}>
+            <button type="submit" className={styles.btn} disabled={loading}>
+              {loading ? "Saving..." : "Add Subject"}
+            </button>
+          </div>
+        </form>
+      </div>
+
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
-      <div className={styles.subjectList}>
-        <h2>Existing Subjects</h2>
-        {subjects.length === 0 && <div>No subjects found.</div>}
-        <ul>
-          {subjects.map(subject => (
-            <li key={subject.id} className={styles.subjectItem}>
-              <span>{subject.name} {subject.code && <span>({subject.code})</span>}</span>
-              <button onClick={() => handleDelete(subject.id)} className={styles.deleteButton} disabled={loading}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      
+      {loading ? (
+        <div className={styles.loading}>Loading subjects...</div>
+      ) : filteredSubjects.length > 0 ? (
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th style={{width: '45%'}}>Subject Name</th>
+                <th style={{width: '35%'}}>Subject Code</th>
+                <th style={{width: '20%'}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSubjects.map((subject) => (
+                <tr key={subject.id}>
+                  <td className={styles.nameCell}>{subject.name}</td>
+                  <td>{subject.code || 'N/A'}</td>
+                  <td>
+                    <div className={styles.actionButtons}>
+                      <button
+                        className={`${styles.btn} ${styles.deleteBtn}`}
+                        onClick={() => handleDelete(subject.id)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className={styles.noData}>
+          {searchTerm 
+            ? 'No subjects found matching your search.' 
+            : 'No subjects available.'}
+        </div>
+      )}
+    </>
   );
 }

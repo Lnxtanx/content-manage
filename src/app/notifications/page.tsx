@@ -66,52 +66,87 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Notifications</h1>
-      <form onSubmit={handleAdd} className={styles.form}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          className={styles.input}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Type"
-          value={type}
-          onChange={e => setType(e.target.value)}
-          className={styles.input}
-          required
-        />
-        <textarea
-          placeholder="Message (optional)"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Saving..." : "Add Notification"}
-        </button>
-      </form>
+    <>
+      <h1 className={styles.title}>Notifications</h1>
+      
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
-      <div className={styles.notificationList}>
-        <h2>All Notifications</h2>
-        {notifications.length === 0 && <div>No notifications found.</div>}
-        <ul>
-          {notifications.map(n => (
-            <li key={n.id} className={styles.notificationItem}>
-              <div>
-                <b>{n.title}</b> <span>({n.type})</span>
-                <div>{n.message}</div>
-                <small>{n.created_at ? new Date(n.created_at).toLocaleString() : ""}</small>
-              </div>
-            </li>
-          ))}
-        </ul>
+      
+      <div className={styles.addFormSection}>
+        <h2>Create New Notification</h2>
+        <form onSubmit={handleAdd} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label htmlFor="title">Title</label>
+            <input
+              id="title"
+              type="text"
+              placeholder="Enter notification title"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className={styles.formControl}
+              required
+            />
+          </div>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="type">Type</label>
+            <select
+              id="type"
+              value={type}
+              onChange={e => setType(e.target.value)}
+              className={styles.formControl}
+              required
+            >
+              <option value="">Select notification type</option>
+              <option value="announcement">Announcement</option>
+              <option value="alert">Alert</option>
+              <option value="update">Update</option>
+              <option value="reminder">Reminder</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="message">Message (optional)</label>
+            <textarea
+              id="message"
+              placeholder="Enter notification details"
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              className={styles.formControl}
+              rows={4}
+            />
+          </div>
+          
+          <div className={styles.formActions}>
+            <button type="submit" className={styles.btn} disabled={loading}>
+              {loading ? "Saving..." : "Add Notification"}
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+      
+      {loading ? (
+        <div className={styles.loading}>Loading notifications...</div>
+      ) : notifications.length > 0 ? (
+        <div className={styles.notificationList}>
+          <h2>All Notifications</h2>
+          {notifications.map(n => (
+            <div key={n.id} className={styles.notificationItem}>
+              <div>
+                <h3 style={{margin: '0 0 0.5rem 0'}}>{n.title}</h3>
+                <span className={styles.notificationType}>{n.type}</span>
+                <div style={{margin: '0.75rem 0', color: '#444'}}>{n.message}</div>
+                <div style={{fontSize: '0.8rem', color: '#666'}}>
+                  {n.created_at ? new Date(n.created_at).toLocaleString() : ""}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.noData}>No notifications available.</div>
+      )}
+    </>
   );
 }
