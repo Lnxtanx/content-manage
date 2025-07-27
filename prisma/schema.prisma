@@ -30,6 +30,7 @@ model Teacher {
   LeaveApplication      LeaveApplication[]
   LessonLog             LessonLog[]
   teacher_class_subject teacher_class_subject[]
+  teacher_sessions      teacher_sessions[]
   schools               schools                 @relation(fields: [schoolId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher_school")
   subject               subject?                @relation(fields: [subject_id], references: [id], onUpdate: NoAction, map: "fk_teacher_subject")
   timetables            Timetable[]
@@ -155,6 +156,7 @@ model schools {
   announcement     announcement[]
   job_post         job_post[]
   notification     notification[]
+  school_sessions  school_sessions[]
   teachers         Teacher[]
 
   @@index([email])
@@ -225,4 +227,36 @@ model teacher_class_subject {
   teachers   Teacher @relation(fields: [teacher_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_teacher")
 
   @@unique([teacher_id, class_id, subject_id])
+}
+
+model school_sessions {
+  id            Int       @id @default(autoincrement())
+  school_id     Int
+  token         String    @db.VarChar(255)
+  user_agent    String?   @db.VarChar(255)
+  ip_address    String?   @db.VarChar(45)
+  is_active     Boolean?  @default(true)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  expires_at    DateTime? @db.Timestamp(6)
+  last_activity DateTime? @default(now()) @db.Timestamp(6)
+  schools       schools   @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_session_school")
+
+  @@index([school_id], map: "idx_school_sessions_school_id")
+  @@index([token], map: "idx_school_sessions_token")
+}
+
+model teacher_sessions {
+  id            Int       @id @default(autoincrement())
+  teacher_id    Int
+  token         String    @db.VarChar(255)
+  user_agent    String?   @db.VarChar(255)
+  ip_address    String?   @db.VarChar(45)
+  is_active     Boolean?  @default(true)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  expires_at    DateTime? @db.Timestamp(6)
+  last_activity DateTime? @default(now()) @db.Timestamp(6)
+  teachers      Teacher   @relation(fields: [teacher_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_session_teacher")
+
+  @@index([teacher_id], map: "idx_teacher_sessions_teacher_id")
+  @@index([token], map: "idx_teacher_sessions_token")
 }

@@ -1,0 +1,401 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2rem;
+  text-align: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.schoolSelector {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  min-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
+}
+
+.reportContainer {
+  margin-top: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.reportHeader h2 {
+  margin: 0;
+  color: #333;
+}
+
+.downloadButton {
+  padding: 0.75rem 1.5rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.downloadButton:hover {
+  background-color: #0060df;
+}
+
+.lessonList {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.listHeader {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  font-weight: 600;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #eee;
+}
+
+.lessonRow {
+  display: flex;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-top: none;
+  transition: background-color 0.2s;
+}
+
+.lessonRow:hover {
+  background-color: #f9f9f9;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.filterButton {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.filterButton:hover {
+  background-color: #e0e0e0;
+}
+
+.activeFilter {
+  background-color: #0070f3;
+  color: white;
+  border-color: #0070f3;
+}
+
+.reportsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.reportCard {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.reportCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reportCard h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.reportCard p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.reportMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.reportType {
+  text-transform: capitalize;
+  background-color: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  color: #555;
+  font-weight: 500;
+}
+
+.reportDate {
+  color: #888;
+}
+
+.reportActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.viewBtn,
+.generateBtn,
+.exportBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.viewBtn {
+  background-color: #0070f3;
+  color: white;
+  flex: 1;
+}
+
+.viewBtn:hover {
+  background-color: #0060df;
+}
+
+.generateBtn {
+  background-color: #f0f0f0;
+  color: #333;
+  flex: 1;
+}
+
+.generateBtn:hover {
+  background-color: #e0e0e0;
+}
+
+.exportBtn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.exportBtn:hover {
+  background-color: #e0e0e0;
+}
+
+.lessonCard h3 {
+  margin: 0 0 1rem;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.className {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  background: #f5f5f5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.lessonDetails {
+  margin: 1rem 0;
+}
+
+.section {
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+.section h4 {
+  color: #444;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.section p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.completionStatus {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.completed {
+  background-color: #e6f4ea;
+  color: #1e8e3e;
+}
+
+.incomplete {
+  background-color: #fce8e6;
+  color: #d93025;
+}
+
+.completionInfo {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #666;
+  background: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.completionInfo p {
+  margin: 0.25rem 0;
+}
+
+.columnLesson {
+  flex: 2;
+  min-width: 200px;
+  padding-right: 1rem;
+}
+
+.columnClass {
+  flex: 1;
+  min-width: 100px;
+  padding-right: 1rem;
+}
+
+.columnDetails {
+  flex: 3;
+  min-width: 300px;
+  padding-right: 1rem;
+}
+
+.columnStatus {
+  flex: 1;
+  min-width: 120px;
+  padding-right: 1rem;
+}
+
+.columnCompletion {
+  flex: 2;
+  min-width: 200px;
+}
+
+.detailItem {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.detailItem:last-child {
+  margin-bottom: 0;
+}
+
+.pendingText {
+  color: #666;
+  font-style: italic;
+}
+
+.noData,
+.noSchool {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin: 2rem 0;
+  font-size: 1.1rem;
+}
+
+@media print {
+  .downloadButton {
+    display: none;
+  }
+  
+  .container {
+    padding: 0;
+  }
+  
+  .reportContainer {
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .select {
+    min-width: 100%;
+  }
+
+  .lessonList {
+    font-size: 0.9rem;
+  }
+
+  .columnDetails {
+    min-width: 250px;
+  }
+}

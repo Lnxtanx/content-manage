@@ -4,7 +4,9 @@ import './globals.css';
 import Navigation from '@/components/Navigation';
 import RouteLoaderProvider from '@/components/RouteLoaderProvider';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import ClientLayout from './ClientLayout';
 
+// Metadata can only be used in a Server Component
 export const metadata: Metadata = {
   title: 'Sportal Foundation Management System',
   description: 'Upload and manage school syllabuses',
@@ -46,7 +48,7 @@ export default function RootLayout({
         <meta name="favicon-version" content={new Date().getTime().toString()} />
         {/* Add performance optimization meta tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         {/* Preconnect to critical domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -80,10 +82,12 @@ export default function RootLayout({
       <body>
         <ErrorBoundary>
           <RouteLoaderProvider>
-            <Navigation />
-            <main className="main-content">
-              {children}
-            </main>
+            <ClientLayout>
+              <Navigation />
+              <main className="main-content">
+                {children}
+              </main>
+            </ClientLayout>
           </RouteLoaderProvider>
         </ErrorBoundary>
       </body>

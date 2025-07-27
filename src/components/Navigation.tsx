@@ -1,10 +1,8 @@
 'use client';
 
-import { memo, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import dynamic from 'next/dynamic';
-import { memoryOptimizer, performanceMonitor } from '@/lib/performance-optimizer';
 import { 
   FaSchool, 
   FaChalkboardTeacher, 
@@ -13,7 +11,13 @@ import {
   FaUpload,
   FaList,
   FaGraduationCap,
-  FaBell
+  FaBell,
+  FaChevronLeft,
+  FaChevronRight,
+  FaInfoCircle,
+  FaChartBar,
+  FaServer,
+  FaUserCog
 } from 'react-icons/fa';
 import styles from './Navigation.module.css';
 
@@ -69,6 +73,11 @@ const navItems = [
     icon: <FaList />,
   },
   {
+    label: 'Reports',
+    href: '/reports',
+    icon: <FaChartBar />,
+  },
+  {
     label: 'FAQ',
     href: '/faq',
     icon: <FaBook />,
@@ -76,7 +85,7 @@ const navItems = [
 ];
 
 // Memoized NavLink component for better performance
-const NavLink = memo(({ 
+const NavLink = React.memo(({ 
   href, 
   isActive, 
   icon, 
@@ -92,7 +101,7 @@ const NavLink = memo(({
       <Link
         href={href}
         className={`${styles.navLink} ${isActive ? styles.active : ''}`}
-        prefetch={false} // Disable prefetching for less important routes
+        prefetch={false}
       >
         <span className={styles.icon}>{icon}</span>
         {label}
@@ -105,12 +114,33 @@ NavLink.displayName = 'NavLink';
 
 function Navigation() {
   const pathname = usePathname();
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false);
 
-  // Refresh connection monitor
-  useEffect(() => {
-    performanceMonitor.start('navigation-render');
+  const toggleLeftSidebar = () => {
+    const newState = !leftSidebarCollapsed;
+    setLeftSidebarCollapsed(newState);
     
-    // Monitor network status for potential refresh
+    // Dispatch custom event to notify layout
+    const event = new CustomEvent('leftSidebarToggle', { 
+      detail: { collapsed: newState }
+    });
+    window.dispatchEvent(event);
+  };
+
+  const toggleRightSidebar = () => {
+    const newState = !rightSidebarCollapsed;
+    setRightSidebarCollapsed(newState);
+    
+    // Dispatch custom event to notify layout
+    const event = new CustomEvent('rightSidebarToggle', { 
+      detail: { collapsed: newState }
+    });
+    window.dispatchEvent(event);
+  };
+
+  // Monitor network status
+  useEffect(() => {
     const handleOnline = () => {
       console.log('Connection restored');
     };
@@ -122,15 +152,6 @@ function Navigation() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     
-    // Implement memory optimization for this component
-    memoryOptimizer.trackObject(navItems, { 
-      type: 'navigation',
-      component: 'Navigation'
-    });
-    
-    performanceMonitor.end('navigation-render');
-    
-    // Clean up event listeners
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -157,7 +178,7 @@ function Navigation() {
 
   return (
     <>
-      <header className={styles.header}>
+      <header className={`${styles.header} ${leftSidebarCollapsed ? styles.headerExpanded : ''} ${rightSidebarCollapsed ? '' : styles.headerWithRightSidebar}`}>
         <div className={styles.headerContent}>
           <div className={styles.headerLogo}>
             <FaGraduationCap size={24} />
@@ -170,17 +191,30 @@ function Navigation() {
                 <FaBell size={22} />
               </Link>
             </div>
+            <div className={styles.profileSection}>
+              <Link href="/admin-settings" className={styles.profileIcon} title="Admin Settings">
+                <FaUserCog size={22} />
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
-      <nav className={styles.nav}>
+      {/* Left Sidebar */}
+      <nav className={`${styles.nav} ${leftSidebarCollapsed ? styles.collapsed : ''}`}>
         <div className={styles.logoRow}>
           <Link href="/" className={styles.logo}>
             <FaGraduationCap size={24} />
-            <span>Admin system </span>
+            {!leftSidebarCollapsed && <span>Admin system</span>}
           </Link>
         </div>
+        <button 
+          className={styles.toggleButton} 
+          onClick={toggleLeftSidebar}
+          aria-label={leftSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {leftSidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+        </button>
         <ul className={styles.navList}>
           {navItems.map((item) => (
             <NavLink
@@ -188,14 +222,57 @@ function Navigation() {
               href={item.href}
               isActive={pathname === item.href}
               icon={item.icon}
-              label={item.label}
+              label={leftSidebarCollapsed ? '' : item.label}
             />
           ))}
         </ul>
       </nav>
+
+      {/* Right Sidebar */}
+      <aside className={`${styles.rightSidebar} ${rightSidebarCollapsed ? styles.collapsed : ''}`}>
+        <div className={styles.logoRow}>
+          <Link href="/system-logs" className={styles.logo}>
+            <FaGraduationCap size={24} />
+            {!rightSidebarCollapsed && <span>User Activity</span>}
+          </Link>
+        </div>
+        <button 
+          className={styles.toggleButton} 
+          onClick={toggleRightSidebar}
+          aria-label={rightSidebarCollapsed ? "Expand right sidebar" : "Collapse right sidebar"}
+        >
+          {rightSidebarCollapsed ? <FaChevronLeft /> : <FaChevronRight />}
+        </button>
+        
+        <ul className={styles.navList}>
+          {/* User activity group */}
+          {!rightSidebarCollapsed && (
+            <li className={styles.navGroupTitle}>
+              <div className={styles.groupDivider}>User Activity</div>
+            </li>
+          )}
+          <li>
+            <Link
+              href="/user_activity/active-teachers"
+              className={`${styles.navLink} ${pathname === '/user_activity/active-teachers' ? styles.active : ''}`}
+            >
+              <span className={styles.icon}><FaChalkboardTeacher /></span>
+              {!rightSidebarCollapsed && "Active Teachers"}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/user_activity/active-principals"
+              className={`${styles.navLink} ${pathname === '/user_activity/active-principals' ? styles.active : ''}`}
+            >
+              <span className={styles.icon}><FaGraduationCap /></span>
+              {!rightSidebarCollapsed && "Active Principals"}
+            </Link>
+          </li>
+        </ul>
+      </aside>
     </>
   );
 }
 
-// Use memo to prevent unnecessary re-renders
-export default memo(Navigation);
+export default React.memo(Navigation);

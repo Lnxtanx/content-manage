@@ -1,12 +1,26 @@
 .header {
   position: fixed;
   top: 0;
-  left: 250px; /* Same as nav width */
+  left: 250px; /* Default left sidebar width */
   width: calc(100% - 250px);
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 0.75rem 2rem;
   z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.headerExpanded {
+  left: 60px; /* Width when left sidebar is collapsed */
+  width: calc(100% - 60px);
+}
+
+.headerWithRightSidebar {
+  width: calc(100% - 250px - 250px); /* Adjust for both sidebars - equal width */
+}
+
+.headerExpanded.headerWithRightSidebar {
+  width: calc(100% - 60px - 250px); /* Adjust for collapsed left sidebar and right sidebar */
 }
 
 .headerContent {
@@ -27,12 +41,18 @@
 .headerRight {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .notificationSection {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.profileSection {
+  display: flex;
+  align-items: center;
 }
 
 .notificationLabel {
@@ -53,7 +73,86 @@
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
   scrollbar-width: thin;
+  transition: all 0.3s ease;
 }
+
+.nav.collapsed {
+  width: 60px;
+  padding: 1rem 0.5rem;
+  overflow-x: hidden;
+}
+
+.toggleButton {
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1010;
+  transform: translateY(-50%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.toggleButton:hover {
+  background: var(--hover-color);
+}
+
+/* Right Sidebar Styles */
+.rightSidebar {
+  background: var(--secondary-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px; /* Same size as left sidebar */
+  height: 100vh;
+  z-index: 1000;
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  transition: all 0.3s ease;
+}
+
+.rightSidebar.collapsed {
+  width: 60px;
+  padding: 1rem 0.5rem;
+  overflow-x: hidden;
+}
+
+.rightSidebar .toggleButton {
+  left: -12px;
+  right: auto;
+}
+
+/* Removed the rightSidebarHeader and rightSidebarContent styles since we're making it similar to left sidebar */
+
+/* Info section styles removed */
+
+/* Make right sidebar navList have same styling as the left sidebar */
+.rightSidebar .navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rightSidebar.collapsed .navLink {
+  padding: 0.75rem 0.5rem;
+  justify-content: center;
+}
+
+/* Info header and events list styles removed */
+
+/* Console output styles removed as they're no longer needed */
 
 .logoRow {
   display: flex;
@@ -70,6 +169,8 @@
   font-size: 1.25rem;
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .navList {
@@ -88,6 +189,12 @@
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav.collapsed .navLink {
+  padding: 0.75rem 0.5rem;
+  justify-content: center;
 }
 
 .navLink:hover {
@@ -98,6 +205,21 @@
 .navLink.active {
   background: rgba(96, 165, 250, 0.2);
   color: var(--primary-color);
+}
+
+.navGroupTitle {
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.groupDivider {
+  font-size: 0.8rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 0.5rem;
 }
 
 .icon {
@@ -123,4 +245,57 @@
 
 .notificationIcon:hover {
   background: #e3e8f0;
+}
+
+.profileIcon {
+  color: #667eea;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileIcon:hover {
+  background: #e3e8f0;
+  transform: scale(1.1);
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+  .header {
+    left: 0;
+    width: 100%;
+  }
+  
+  .headerWithRightSidebar,
+  .headerExpanded,
+  .headerExpanded.headerWithRightSidebar {
+    left: 0;
+    width: 100%;
+  }
+
+  .nav {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+  
+  .nav.collapsed {
+    transform: translateX(0);
+    width: 60px;
+  }
+  
+  .rightSidebar {
+    transform: translateX(100%);
+    box-shadow: none;
+  }
+  
+  .rightSidebar.collapsed {
+    transform: translateX(0);
+    width: 60px;
+  }
 }

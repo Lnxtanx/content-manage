@@ -53,16 +53,35 @@ body {
 /* Main content area */
 .main-content {
   margin-left: 250px;
+  margin-right: 250px; /* Account for the right sidebar - now same size as left */
   padding-top: 70px; /* Adjusted for header height */
   padding-left: 2rem;
   padding-right: 2rem;
   padding-bottom: 2rem;
   min-height: calc(100vh - 80px);
-  width: calc(100% - 250px);
+  width: calc(100% - 250px - 250px); /* Account for both sidebars */
   -webkit-transform: translate3d(0, 0, 0); /* Hardware acceleration */
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Adjust main content when sidebars are collapsed */
+.leftSidebarCollapsed .main-content {
+  margin-left: 60px;
+  width: calc(100% - 60px - 250px);
+}
+
+.rightSidebarCollapsed .main-content {
+  margin-right: 60px;
+  width: calc(100% - 250px - 60px);
+}
+
+.leftSidebarCollapsed.rightSidebarCollapsed .main-content {
+  margin-left: 60px;
+  margin-right: 60px;
+  width: calc(100% - 60px - 60px);
 }
 
 /* Page content - for pages without container wrappers */
@@ -154,8 +173,17 @@ button {
 @media screen and (max-width: 768px) {
   .main-content {
     margin-left: 0;
+    margin-right: 0;
     width: 100%;
     padding: 1rem;
+  }
+
+  .leftSidebarCollapsed .main-content,
+  .rightSidebarCollapsed .main-content,
+  .leftSidebarCollapsed.rightSidebarCollapsed .main-content {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
   }
 
   .grid-container {
