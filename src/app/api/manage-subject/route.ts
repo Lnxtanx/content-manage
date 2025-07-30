@@ -25,6 +25,36 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const { id, name, code } = await request.json();
+    
+    if (!id || !name) {
+      return NextResponse.json({ error: 'ID and name are required' }, { status: 400 });
+    }
+
+    // Check if subject exists
+    const existingSubject = await prisma.subject.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingSubject) {
+      return NextResponse.json({ error: 'Subject not found' }, { status: 404 });
+    }
+
+    // Update the subject
+    const updatedSubject = await prisma.subject.update({
+      where: { id: Number(id) },
+      data: { name, code },
+    });
+
+    return NextResponse.json(updatedSubject);
+  } catch (error) {
+    console.error('Error updating subject:', error);
+    return NextResponse.json({ error: 'Failed to update subject' }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

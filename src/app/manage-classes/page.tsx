@@ -11,6 +11,8 @@ interface Class {
 export default function ManageClasses() {
   const [classes, setClasses] = useState<Class[]>([]);
   const [newClassName, setNewClassName] = useState('');
+  const [editingClass, setEditingClass] = useState<Class | null>(null);
+  const [editClassName, setEditClassName] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -59,6 +61,78 @@ export default function ManageClasses() {
     }
   };
 
+  const handleEdit = (classItem: Class) => {
+    setEditingClass(classItem);
+    setEditClassName(classItem.name);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingClass) return;
+    
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/classes', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          id: editingClass.id, 
+          name: editClassName 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('✓ Class updated successfully!');
+        setEditingClass(null);
+        setEditClassName('');
+        fetchClasses(); // Refresh the class list
+      } else {
+        setMessage(`Error: ${data.error || 'Failed to update class'}`);
+      }
+    } catch (error) {
+      setMessage('Error: Network error or server not responding');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this class?')) return;
+    
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch(`/api/classes?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('✓ Class deleted successfully!');
+        fetchClasses(); // Refresh the class list
+      } else {
+        setMessage(`Error: ${data.error || 'Failed to delete class'}`);
+      }
+    } catch (error) {
+      setMessage('Error: Network error or server not responding');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingClass(null);
+    setEditClassName('');
+  };
+
   return (
     <>
       <h1 className={styles.title}>Manage Classes</h1>
@@ -96,6 +170,43 @@ export default function ManageClasses() {
         </form>
       </div>
 
+      {editingClass && (
+        <div className={styles.editFormSection}>
+          <h2>Edit Class</h2>
+          <form onSubmit={handleEditSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label htmlFor="editClassName">Class Name</label>
+              <input
+                type="text"
+                id="editClassName"
+                className={styles.formControl}
+                value={editClassName}
+                onChange={(e) => setEditClassName(e.target.value)}
+                required
+                placeholder="Enter class name"
+              />
+            </div>
+            <div className={styles.formActions}>
+              <button
+                type="submit"
+                className={`${styles.btn} ${loading ? styles.loading : ''}`}
+                disabled={loading}
+              >
+                {loading ? 'Updating...' : 'Update Class'}
+              </button>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.cancelBtn}`}
+                onClick={cancelEdit}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       {loading ? (
         <div className={styles.loading}>Loading classes...</div>
       ) : classes.length > 0 ? (
@@ -103,13 +214,32 @@ export default function ManageClasses() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{width: '100%'}}>Class Name</th>
+                <th style={{width: '60%'}}>Class Name</th>
+                <th style={{width: '40%'}}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {classes.map((cls) => (
                 <tr key={cls.id}>
                   <td className={styles.nameCell}>{cls.name}</td>
+                  <td>
+                    <div className={styles.actionButtons}>
+                      <button
+                        className={`${styles.btn} ${styles.editBtn}`}
+                        onClick={() => handleEdit(cls)}
+                        disabled={loading}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className={`${styles.btn} ${styles.deleteBtn}`}
+                        onClick={() => handleDelete(cls.id)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

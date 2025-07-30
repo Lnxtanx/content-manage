@@ -72,12 +72,39 @@ const nextConfig = {
 
   // Webpack configuration for production
   webpack: (config, { isServer, dev }) => {
+    // Fix for module loading issues
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
+    // Fix webpack runtime issues
     if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
+      config.optimization = {
+        ...config.optimization,
+        runtimeChunk: false, // Disable runtime chunk to prevent module loading errors
+        splitChunks: {
+          chunks: 'all',
+          maxInitialRequests: 20,
+          minSize: 20000,
+          maxSize: 60000,
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: 10,
+              chunks: 'all',
+            },
+            commons: {
+              name: 'commons',
+              minChunks: 2,
+              priority: 5,
+              chunks: 'all',
+            },
+          },
+        },
       };
       
       // Add bundle analyzer in analyze mode
@@ -91,44 +118,11 @@ const nextConfig = {
           })
         );
       }
-      
-      // Optimize bundle size
-      config.optimization = {
-        ...config.optimization,
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          maxInitialRequests: 25,
-          minSize: 20000,
-          maxSize: 80000,
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name(module) {
-                // Get the package name from the path
-                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-                return `npm.${packageName.replace('@', '')}`;
-              },
-              priority: 10,
-            },
-            commons: {
-              name: 'commons',
-              minChunks: 2,
-              priority: 5,
-            },
-            default: {
-              minChunks: 2,
-              priority: -20,
-              reuseExistingChunk: true,
-            },
-          },
-        },
-      };
     }
     
-    // Fix for CSS HMR issues
+    // Fix for CSS HMR issues in development
     if (dev) {
-      // Use newer implementation for CSS modules in development
+      // Prevent CSS module naming conflicts
       const rules = config.module.rules
         .find((rule) => typeof rule.oneOf === 'object')
         ?.oneOf.filter((rule) => Array.isArray(rule.use));
@@ -142,6 +136,7 @@ const nextConfig = {
             ) {
               if (moduleLoader.options?.modules) {
                 moduleLoader.options.modules.exportLocalsConvention = 'camelCase';
+                moduleLoader.options.modules.mode = 'local';
               }
             }
           });
@@ -158,11 +153,13 @@ const nextConfig = {
       
       // Remove console in production
       config.optimization.minimizer = config.optimization.minimizer || [];
+      const TerserPlugin = require('terser-webpack-plugin');
       config.optimization.minimizer.push(
-        new (require('terser-webpack-plugin'))({
+        new TerserPlugin({
           terserOptions: {
             compress: {
               drop_console: true,
+              drop_debugger: true,
             },
           },
         })

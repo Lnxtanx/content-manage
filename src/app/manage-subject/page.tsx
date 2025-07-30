@@ -12,6 +12,9 @@ export default function ManageSubject() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editCode, setEditCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -93,6 +96,52 @@ export default function ManageSubject() {
     }
   };
 
+  const handleEdit = (subject: Subject) => {
+    setEditingSubject(subject);
+    setEditName(subject.name);
+    setEditCode(subject.code || "");
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingSubject) return;
+    
+    setError("");
+    setSuccess("");
+    if (!editName.trim()) {
+      setError("Subject name is required");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/manage-subject", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          id: editingSubject.id, 
+          name: editName, 
+          code: editCode 
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to update subject");
+      setEditingSubject(null);
+      setEditName("");
+      setEditCode("");
+      setSuccess("Subject updated successfully");
+      fetchSubjects();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingSubject(null);
+    setEditName("");
+    setEditCode("");
+  };
+
   return (
     <>
       <h1 className={styles.title}>Manage Subjects</h1>
@@ -155,6 +204,50 @@ export default function ManageSubject() {
         </form>
       </div>
 
+      {editingSubject && (
+        <div className={styles.editFormSection}>
+          <h2>Edit Subject</h2>
+          <form onSubmit={handleEditSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label htmlFor="editSubjectName">Subject Name</label>
+              <input
+                id="editSubjectName"
+                type="text"
+                placeholder="Enter subject name"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                className={styles.formControl}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="editSubjectCode">Subject Code (optional)</label>
+              <input
+                id="editSubjectCode"
+                type="text"
+                placeholder="Enter subject code"
+                value={editCode}
+                onChange={e => setEditCode(e.target.value)}
+                className={styles.formControl}
+              />
+            </div>
+            <div className={styles.formActions}>
+              <button type="submit" className={styles.btn} disabled={loading}>
+                {loading ? "Updating..." : "Update Subject"}
+              </button>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.cancelBtn}`}
+                onClick={cancelEdit}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
       
@@ -165,9 +258,9 @@ export default function ManageSubject() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th style={{width: '45%'}}>Subject Name</th>
-                <th style={{width: '35%'}}>Subject Code</th>
-                <th style={{width: '20%'}}>Actions</th>
+                <th style={{width: '35%'}}>Subject Name</th>
+                <th style={{width: '25%'}}>Subject Code</th>
+                <th style={{width: '40%'}}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -177,6 +270,13 @@ export default function ManageSubject() {
                   <td>{subject.code || 'N/A'}</td>
                   <td>
                     <div className={styles.actionButtons}>
+                      <button
+                        className={`${styles.btn} ${styles.editBtn}`}
+                        onClick={() => handleEdit(subject)}
+                        disabled={loading}
+                      >
+                        Edit
+                      </button>
                       <button
                         className={`${styles.btn} ${styles.deleteBtn}`}
                         onClick={() => handleDelete(subject.id)}

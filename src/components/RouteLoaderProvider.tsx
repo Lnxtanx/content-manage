@@ -1,10 +1,16 @@
 "use client";
 import { useEffect, useState, useCallback, memo } from 'react';
 import { usePathname } from 'next/navigation';
-import Loader from '@/components/Loader';
+import dynamic from 'next/dynamic';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { healthMonitor, componentHealth } from '@/lib/health-monitor';
 import '@/lib/performance-types';
+
+// Dynamically import Loader to prevent hydration issues
+const Loader = dynamic(() => import('@/components/Loader'), {
+  ssr: false,
+  loading: () => null
+});
 
 // Track failed requests to implement automatic refresh
 const failedRequestsThreshold = 3;
@@ -13,41 +19,61 @@ let lastFailedTimestamp = 0;
 
 // Memoized child components to prevent unnecessary re-renders
 const MemoizedChildren = memo(
-  ({ children }: { children: React.ReactNode }) => children,
+  ({ children }: { children: React.ReactNode }) => <>{children}</>,
   () => true // Always return true for maximum memoization
 );
+
+MemoizedChildren.displayName = 'MemoizedChildren';
 
 export default function RouteLoaderProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [failedToLoad, setFailedToLoad] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is mounted before doing any side effects
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Initialize health monitoring
   useEffect(() => {
-    // Start the health monitoring system
-    healthMonitor.init();
-    
-    // Check for memory leaks
-    const memoryCheckInterval = setInterval(() => {
-      if (window.performance && window.performance.memory) {
-        const usedHeapSizeMB = Math.round(window.performance.memory.usedJSHeapSize / (1024 * 1024));
-        const totalHeapSizeMB = Math.round(window.performance.memory.totalJSHeapSize / (1024 * 1024));
-        
-        // If using too much memory, refresh the page
-        if (usedHeapSizeMB > 150 || (totalHeapSizeMB > 0 && usedHeapSizeMB / totalHeapSizeMB > 0.85)) {
-          console.warn(`Memory usage high (${usedHeapSizeMB}MB), refreshing application...`);
-          healthMonitor.forceRefresh(1000);
+    if (!mounted) return;
+
+    try {
+      // Start the health monitoring system
+      healthMonitor.init();
+      
+      // Check for memory leaks
+      const memoryCheckInterval = setInterval(() => {
+        try {
+          if (window.performance && window.performance.memory) {
+            const usedHeapSizeMB = Math.round(window.performance.memory.usedJSHeapSize / (1024 * 1024));
+            const totalHeapSizeMB = Math.round(window.performance.memory.totalJSHeapSize / (1024 * 1024));
+            
+            // If using too much memory, refresh the page
+            if (usedHeapSizeMB > 150 || (totalHeapSizeMB > 0 && usedHeapSizeMB / totalHeapSizeMB > 0.85)) {
+              console.warn(`Memory usage high (${usedHeapSizeMB}MB), refreshing application...`);
+              healthMonitor.forceRefresh(1000);
+            }
+          }
+        } catch (error) {
+          console.error('Memory check error:', error);
         }
-      }
-    }, 60000); // Check every minute
-    
-    return () => {
-      clearInterval(memoryCheckInterval);
-    };
-  }, []);
+      }, 60000); // Check every minute
+      
+      return () => {
+        clearInterval(memoryCheckInterval);
+      };
+    } catch (error) {
+      console.error('Failed to initialize health monitoring:', error);
+    }
+  }, [mounted]);
   
   // Auto-refresh logic when too many failures occur
   useEffect(() => {
+    if (!mounted) return;
+
     if (failedToLoad) {
       const currentTime = Date.now();
       
@@ -64,13 +90,20 @@ export default function RouteLoaderProvider({ children }: { children: React.Reac
       if (consecutiveFailedRequests >= failedRequestsThreshold) {
         console.warn('Too many failures detected, refreshing application...');
         consecutiveFailedRequests = 0;
-        healthMonitor.forceRefresh(1000);
+        try {
+          healthMonitor.forceRefresh(1000);
+        } catch (error) {
+          console.error('Failed to force refresh:', error);
+          window.location.reload();
+        }
       }
     }
-  }, [failedToLoad]);
+  }, [failedToLoad, mounted]);
 
   // Route change handler
   useEffect(() => {
+    if (!mounted) return;
+
     // Reset failed state on route change
     setFailedToLoad(false);
     
@@ -86,37 +119,29 @@ export default function RouteLoaderProvider({ children }: { children: React.Reac
     const timeout = setTimeout(() => {
       if (isMounted) {
         setLoading(false);
-        sessionStorage.setItem(`visited-${pathname}`, 'true');
+        try {
+          sessionStorage.setItem(`visited-${pathname}`, 'true');
+        } catch (error) {
+          console.error('Failed to set session storage:', error);
+        }
       }
     }, loadTime);
-    
-    // Global error handler for fetch operations
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      try {
-        const response = await originalFetch(...args);
-        if (!response.ok) {
-          setFailedToLoad(true);
-        }
-        return response;
-      } catch (error) {
-        console.error('Fetch error:', error);
-        setFailedToLoad(true);
-        throw error;
-      }
-    };
     
     return () => {
       isMounted = false;
       clearTimeout(timeout);
-      window.fetch = originalFetch;
     };
-  }, [pathname]);
+  }, [pathname, mounted]);
 
   // Callback for manual refresh
   const handleRefresh = useCallback(() => {
     window.location.reload();
   }, []);
+
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return <MemoizedChildren>{children}</MemoizedChildren>;
+  }
 
   return (
     <ErrorBoundary>
