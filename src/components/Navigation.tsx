@@ -182,7 +182,7 @@ function Navigation() {
         <div className={styles.headerContent}>
           <div className={styles.headerLogo}>
             <FaGraduationCap size={24} />
-            <span>Sportal Foundation</span>
+            <span>Sportal Ed</span>
           </div>
           <div className={styles.headerRight}>
             <div className={styles.notificationSection}>

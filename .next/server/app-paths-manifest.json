@@ -1,8 +1,5 @@
 {
-  "/manage-subject/page": "app/manage-subject/page.js",
   "/page": "app/page.js",
-  "/api/dashboard-stats/route": "app/api/dashboard-stats/route.js",
-  "/api/manage-subject/route": "app/api/manage-subject/route.js",
-  "/manage-classes/page": "app/manage-classes/page.js",
-  "/api/classes/route": "app/api/classes/route.js"
+  "/api/health/route": "app/api/health/route.js",
+  "/api/dashboard-stats/route": "app/api/dashboard-stats/route.js"
 }
