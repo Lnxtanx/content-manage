@@ -8,9 +8,17 @@ export const revalidate = 0;
 
 // Increase file size limits
 export const runtime = 'nodejs';
-export const maxDuration = 60; // 60 seconds timeout
+export const maxDuration = 120; // 120 seconds timeout for large file uploads
 
 export async function POST(request: NextRequest) {
+  // Check content length before processing
+  const contentLength = request.headers.get('content-length');
+  if (contentLength && parseInt(contentLength) > 60 * 1024 * 1024) { // 60MB limit
+    return NextResponse.json(
+      { error: 'File size exceeds 60MB limit' },
+      { status: 413 }
+    );
+  }
   try {
     // Set response headers to prevent caching
     const headers = {
@@ -19,6 +27,10 @@ export async function POST(request: NextRequest) {
       'Expires': '0'
     };
 
+    // Log request details for debugging
+    console.log(`Upload request started, content-type: ${request.headers.get('content-type')}, content-length: ${request.headers.get('content-length')}`);
+
+    // Process the form data
     const formData = await request.formData();
 
     const file = formData.get('file') as File;
@@ -30,39 +42,52 @@ export async function POST(request: NextRequest) {
     const lessonobjectives = formData.get('lessonobjectives');
     const isForAllSchools = formData.get('isForAllSchools') === 'true';
 
+    // Log form data for debugging
+    console.log(`Form data received: file=${file?.name}, size=${file?.size}, classId=${classId}, subjectId=${subject_id}`);
+
     // Validate required fields
     if (!file || !classId || !lessonName || !subject_id) {
+      console.warn('Missing required fields in upload request');
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400, headers }
       );
     }
 
-    // Validate file size (50MB limit)
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    // Validate file size (60MB limit)
+    const maxSize = 60 * 1024 * 1024; // 60MB
     if (file.size > maxSize) {
+      console.warn(`File size exceeds limit: ${file.size} bytes`);
       return NextResponse.json(
-        { error: 'File size exceeds 50MB limit' },
+        { error: `File size exceeds 60MB limit (received: ${Math.round(file.size / (1024 * 1024))}MB)` },
         { status: 400, headers }
       );
     }
 
     // Validate file type
     if (!file.type.includes('pdf')) {
+      console.warn(`Invalid file type: ${file.type}`);
       return NextResponse.json(
         { error: 'Only PDF files are allowed' },
         { status: 400, headers }
       );
     }
 
+    console.log('Starting file processing...');
+    
     // Convert file to buffer with streaming for large files
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
+    console.log(`File converted to buffer, size: ${buffer.length} bytes`);
+
     // Upload to S3
+    console.log('Starting S3 upload...');
     const pdfUrl = await uploadFileToS3(buffer, fileName);
+    console.log(`S3 upload complete: ${pdfUrl}`);
 
     // Save to database
+    console.log('Saving to database...');
     const lessonPdf = await prisma.lessonPdf.create({
       data: {
         lessonName: lessonName as string,
@@ -75,27 +100,52 @@ export async function POST(request: NextRequest) {
         isForAllSchools,
       },
     });
+    console.log(`Database entry created with ID: ${lessonPdf.id}`);
 
-    return NextResponse.json(lessonPdf, { headers });
+    return NextResponse.json(
+      { 
+        success: true, 
+        message: 'File uploaded successfully',
+        data: lessonPdf 
+      }, 
+      { headers }
+    );
   } catch (error) {
     console.error('Error uploading syllabus:', error);
     
     // Provide more specific error messages
     let errorMessage = 'Failed to upload syllabus';
+    let statusCode = 500;
+    
     if (error instanceof Error) {
-      if (error.message.includes('timeout')) {
+      console.error('Error details:', error.message, error.stack);
+      
+      if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT')) {
         errorMessage = 'Upload timeout - file too large or slow connection';
-      } else if (error.message.includes('S3')) {
-        errorMessage = 'Failed to upload file to storage';
-      } else if (error.message.includes('database')) {
+        statusCode = 504; // Gateway Timeout
+      } else if (error.message.includes('S3') || error.message.includes('AccessDenied')) {
+        errorMessage = 'Failed to upload file to storage service';
+        statusCode = 500;
+      } else if (error.message.includes('database') || error.message.includes('prisma')) {
         errorMessage = 'Failed to save file information to database';
+        statusCode = 500;
+      } else if (error.message.includes('too large') || error.message.includes('exceeded') || error.message.includes('limit')) {
+        errorMessage = 'File size exceeds server limits';
+        statusCode = 413; // Payload Too Large
+      } else if (error.message.includes('network') || error.message.includes('ECONNRESET')) {
+        errorMessage = 'Network error during upload - please try again';
+        statusCode = 503; // Service Unavailable
       }
     }
     
     return NextResponse.json(
-      { error: errorMessage },
       { 
-        status: 500,
+        error: errorMessage,
+        success: false,
+        details: process.env.NODE_ENV !== 'production' ? (error as Error).message : undefined
+      },
+      { 
+        status: statusCode,
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
           'Pragma': 'no-cache',
