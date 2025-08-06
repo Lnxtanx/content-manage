@@ -78,10 +78,6 @@ NODE_ENV=production
 - Secure file upload handling
 - HTTPS enforcement
 
-## 📋 API Health Check
-
-Monitor system health at: `GET /api/health`
-
 ## 🆘 Support
 
 For technical support or system issues, please contact your system administrator.

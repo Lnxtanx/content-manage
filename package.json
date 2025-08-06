@@ -18,7 +18,6 @@
     "prisma:reset": "prisma migrate reset --force",
     "production:start": "NODE_ENV=production npm run build && npm start",
     "production:migrate": "NODE_ENV=production npx prisma migrate deploy",
-    "health-check": "curl -f http://localhost:3000/api/health || exit 1",
     "clean": "rm -rf .next out dist",
     "analyze": "ANALYZE=true npm run build"
   },

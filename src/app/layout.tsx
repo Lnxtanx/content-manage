@@ -52,30 +52,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* DNS Prefetching */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        {/* Add auto-refresh in case of complete failure */}
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // Auto-refresh on fatal errors
-            window.addEventListener('error', function(e) {
-              // Don't auto-refresh for non-fatal errors
-              if (e && e.error && (e.error.toString().includes('ChunkLoadError') || 
-                  e.error.toString().includes('NetworkError') || 
-                  e.error.toString().includes('Failed to fetch'))) {
-                console.error('Fatal error detected, refreshing in 3 seconds...');
-                setTimeout(function() { window.location.reload(); }, 3000);
-              }
-            });
-            // Memory management
-            if (window.requestIdleCallback) {
-              window.requestIdleCallback(function() {
-                // Cleanup during idle time
-                if (window.performance && window.performance.memory) {
-                  console.log('Memory usage:', Math.round(window.performance.memory.usedJSHeapSize / (1024 * 1024)), 'MB');
-                }
-              });
-            }
-          `
-        }} />
       </head>
       <body>
         <ErrorBoundary>
