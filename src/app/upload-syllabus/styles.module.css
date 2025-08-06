@@ -137,3 +137,13 @@
 .formActions {
   margin-top: 1rem;
 }
+
+.fileInfo {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #0066cc;
+}

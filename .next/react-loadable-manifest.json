@@ -1,16 +1,46 @@
 {
-  "app\\ClientLayout.tsx -> @/components/WebsiteLock": {
-    "id": "app\\ClientLayout.tsx -> @/components/WebsiteLock",
+  "..\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> canvg": {
+    "id": 2396,
     "files": [
-      "static/css/_app-pages-browser_src_components_WebsiteLock_tsx.css",
-      "static/chunks/_app-pages-browser_src_components_WebsiteLock_tsx.js"
+      "static/chunks/framework-27f02048-3ebdbda9f60ab242.js",
+      "static/chunks/framework-4a7382ad-17c90dde18e3bc50.js",
+      "static/chunks/framework-4e8e7ca0-46d9e233f01bff0b.js",
+      "static/chunks/framework-362d063c-edb5620028bdda7c.js",
+      "static/chunks/framework-05e245ef-4ae8eb245c7d8f48.js",
+      "static/chunks/framework-d7c15829-1be79af10cc3e36e.js",
+      "static/chunks/framework-6808aa01-b06b9c9090148783.js",
+      "static/chunks/framework-27161c75-5169106501627db2.js",
+      "static/chunks/framework-a6f90180-908fc43ceab04f3a.js",
+      "static/chunks/framework-d91c2bd6-fa991f198a080401.js",
+      "static/chunks/framework-9a66d3c2-1be64b83ccad44d7.js",
+      "static/chunks/framework-8cbd2506-5c14371506852229.js",
+      "static/chunks/vendor-core-js.6ce94c3cbe88e566.js",
+      "static/chunks/vendor-canvg.8fe98d086f0009d8.js",
+      "static/chunks/5202.da1b48985c76e02d.js"
+    ]
+  },
+  "..\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> dompurify": {
+    "id": 8848,
+    "files": [
+      "static/chunks/vendor-dompurify.26f7a1af35c0f0ce.js"
+    ]
+  },
+  "..\\node_modules\\jspdf\\dist\\jspdf.es.min.js -> html2canvas": {
+    "id": 4457,
+    "files": []
+  },
+  "app\\ClientLayout.tsx -> @/components/WebsiteLock": {
+    "id": 3097,
+    "files": [
+      "static/css/6ded31aa4f183569.css",
+      "static/chunks/3097.ff8f694615868716.js"
     ]
   },
   "components\\RouteLoaderProvider.tsx -> @/components/Loader": {
-    "id": "components\\RouteLoaderProvider.tsx -> @/components/Loader",
+    "id": 9860,
     "files": [
-      "static/css/_app-pages-browser_src_components_Loader_tsx.css",
-      "static/chunks/_app-pages-browser_src_components_Loader_tsx.js"
+      "static/css/27cac47745e6b891.css",
+      "static/chunks/9860.b2406d11ed6e56a0.js"
     ]
   }
 }

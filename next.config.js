@@ -1,73 +1,102 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Production optimizations
-  output: 'standalone',
+  output: process.env.BUILD_STANDALONE === 'true' ? 'standalone' : undefined,
   experimental: {
     // Enable modern optimizations that are stable
     outputFileTracingRoot: undefined,
     optimizePackageImports: ['react-icons'],
     // Disable features that might cause build issues
     memoryBasedWorkersCount: true,
+    // Increase body size limit for large file uploads
+    serverComponentsExternalPackages: ['sharp'],
   },
   
-  // Security headers
+  // Production-specific security headers
   async headers() {
+    const securityHeaders = [
+      {
+        key: 'X-Frame-Options',
+        value: 'DENY',
+      },
+      {
+        key: 'X-Content-Type-Options',
+        value: 'nosniff',
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin',
+      },
+      {
+        key: 'X-XSS-Protection',
+        value: '1; mode=block',
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains; preload',
+      },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=()',
+      },
+    ];
+
+    // Production-specific headers
+    if (process.env.NODE_ENV === 'production') {
+      return [
+        {
+          source: '/((?!api/).*)',
+          headers: [
+            ...securityHeaders,
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+        {
+          source: '/api/(.*)',
+          headers: [
+            ...securityHeaders,
+            {
+              key: 'Cache-Control',
+              value: 'no-store, max-age=0',
+            },
+          ],
+        },
+      ];
+    }
+
+    // Development headers
     return [
       {
         source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          // Cache control for static assets
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-          // Connection optimization
-          {
-            key: 'Connection',
-            value: 'keep-alive',
-          },
-        ],
+        headers: securityHeaders,
       },
     ];
   },
 
-  // Environment variables
+  // Production environment variables available to the client
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+    APP_VERSION: process.env.npm_package_version || '1.0.0',
+    BUILD_TIME: new Date().toISOString(),
   },
 
-  // Image optimization
+  // Production image optimization
   images: {
     domains: [
       process.env.S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com',
     ],
     formats: ['image/webp', 'image/avif'],
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false, // Disable SVG for security
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Image optimization settings
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
-    minimumCacheTTL: 60, // 1 minute minimum cache
+    minimumCacheTTL: 3600, // 1 hour cache for production
   },
   
-  // Add asset prefix for better caching control
+  // Production asset optimization
   assetPrefix: process.env.NODE_ENV === 'production' ? process.env.ASSET_PREFIX : undefined,
 
   // Webpack configuration for production
@@ -80,88 +109,73 @@ const nextConfig = {
       tls: false,
     };
 
-    // Fix webpack runtime issues
-    if (!isServer) {
+    // Add cache configuration to prevent chunk loading issues
+    config.cache = {
+      type: 'filesystem',
+      compression: false,
+      buildDependencies: {
+        config: [__filename],
+      },
+    };
+
+    // Production optimizations
+    if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
-        runtimeChunk: false, // Disable runtime chunk to prevent module loading errors
+        runtimeChunk: 'single',
+        moduleIds: 'deterministic',
         splitChunks: {
           chunks: 'all',
-          maxInitialRequests: 20,
+          maxInitialRequests: 25,
           minSize: 20000,
-          maxSize: 60000,
+          maxSize: 244000,
           cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: 10,
+            default: false,
+            defaultVendors: false,
+            framework: {
               chunks: 'all',
+              name: 'framework',
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+              priority: 40,
+              enforce: true,
             },
-            commons: {
-              name: 'commons',
-              minChunks: 2,
-              priority: 5,
+            vendor: {
+              name: (module) => {
+                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || '';
+                return `vendor-${packageName.replace('@', '')}`;
+              },
+              test: /[\\/]node_modules[\\/]/,
               chunks: 'all',
+              priority: 20,
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true,
             },
           },
         },
       };
-      
-      // Add bundle analyzer in analyze mode
-      if (process.env.ANALYZE === 'true') {
-        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-        config.plugins.push(
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'server',
-            analyzerPort: 8888,
-            openAnalyzer: true,
-          })
-        );
-      }
     }
-    
-    // Fix for CSS HMR issues in development
-    if (dev) {
-      // Prevent CSS module naming conflicts
-      const rules = config.module.rules
-        .find((rule) => typeof rule.oneOf === 'object')
-        ?.oneOf.filter((rule) => Array.isArray(rule.use));
 
-      if (rules) {
-        rules.forEach((rule) => {
-          rule.use.forEach((moduleLoader) => {
-            if (
-              moduleLoader.loader?.includes('css-loader') &&
-              !moduleLoader.loader?.includes('postcss-loader')
-            ) {
-              if (moduleLoader.options?.modules) {
-                moduleLoader.options.modules.exportLocalsConvention = 'camelCase';
-                moduleLoader.options.modules.mode = 'local';
-              }
-            }
-          });
-        });
-      }
-    } else {
-      // Production optimizations
-      if (!config.optimization) {
-        config.optimization = {};
-      }
-      
-      // Enable module concatenation
-      config.optimization.concatenateModules = true;
-      
-      // Remove console in production
-      config.optimization.minimizer = config.optimization.minimizer || [];
+    // Production minification
+    if (!dev) {
       const TerserPlugin = require('terser-webpack-plugin');
+      config.optimization.minimizer = config.optimization.minimizer || [];
       config.optimization.minimizer.push(
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: true,
+              drop_console: process.env.NODE_ENV === 'production',
               drop_debugger: true,
+              pure_funcs: process.env.NODE_ENV === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
             },
+            mangle: true,
+            safari10: true,
           },
+          parallel: true,
         })
       );
     }
@@ -169,34 +183,39 @@ const nextConfig = {
     return config;
   },
 
-  // Compression
+  // Production settings
   compress: true,
-
-  // Powered by header
   poweredByHeader: false,
-
-  // React strict mode
   reactStrictMode: true,
+  swcMinify: true,
 
-  // TypeScript
+  // TypeScript and ESLint
   typescript: {
     ignoreBuildErrors: false,
   },
-
-  // ESLint
   eslint: {
     ignoreDuringBuilds: false,
   },
   
-  // Optimize page loading
-  swcMinify: true,
-  
-  // Automatically refresh on errors
-  onDemandEntries: {
-    // Period (in ms) where the server will keep pages in the buffer
-    maxInactiveAge: 25 * 1000,
-    // Number of pages that should be kept simultaneously without being disposed
-    pagesBufferLength: 2,
+  // Production redirects for security
+  async redirects() {
+    return [
+      {
+        source: '/admin',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/phpMyAdmin',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/wp-admin',
+        destination: '/',
+        permanent: true,
+      },
+    ];
   },
 };
 

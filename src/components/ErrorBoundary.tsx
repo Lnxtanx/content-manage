@@ -42,12 +42,27 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       error.message.includes("Cannot read properties of undefined (reading 'call')") ||
       error.message.includes('ChunkLoadError') ||
       error.message.includes('Loading chunk') ||
-      error.message.includes('Failed to fetch dynamically imported module')
+      error.message.includes('Failed to fetch dynamically imported module') ||
+      error.message.includes('Loading CSS chunk')
     )) {
       console.warn('Webpack module loading error detected, refreshing page...');
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      
+      // Add delay to avoid infinite refresh loops
+      const refreshDelay = process.env.NODE_ENV === 'production' ? 3000 : 2000;
+      
+      // Use a one-time refresh flag in sessionStorage to prevent refresh loops
+      const refreshCount = parseInt(sessionStorage.getItem('refreshCount') || '0', 10);
+      if (refreshCount < 3) {
+        sessionStorage.setItem('refreshCount', (refreshCount + 1).toString());
+        setTimeout(() => {
+          window.location.reload();
+        }, refreshDelay);
+      } else {
+        // Reset after 1 minute to allow future refreshes
+        setTimeout(() => {
+          sessionStorage.setItem('refreshCount', '0');
+        }, 60000);
+      }
     }
   }
 

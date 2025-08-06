@@ -16,6 +16,11 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.backup
+
+# Production files
+.env.production
+production-control.sh
 
 # Vercel
 .vercel
@@ -35,11 +40,12 @@ next-env.d.ts
 Thumbs.db
 
 # Logs
-logs
+logs/
 *.log
+app.pid
 
 # Runtime data
-pids
+pids/
 *.pid
 *.seed
 *.pid.lock
@@ -79,12 +85,6 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-
 # Storybook build outputs
 .out
 .storybook-out
@@ -110,3 +110,21 @@ ssl/
 # Backup files
 *.bak
 *.backup
+
+# Security and sensitive files
+secrets/
+*.secret
+security-audit.log
+
+# Production deployment files
+deployment/
+releases/
+
+# Documentation files (remove for production)
+OPTIMIZATIONS.md
+docs/development/
+*.draft.md
+
+# Development tools
+.eslintrc.dev.js
+webpack.dev.config.js

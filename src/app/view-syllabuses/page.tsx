@@ -39,10 +39,25 @@ export default function ViewSyllabuses() {
   const [editingLesson, setEditingLesson] = useState<LessonPdf | null>(null);
 
   useEffect(() => {
-    // Fetch classes and subjects
+    // Fetch classes and subjects with cache-busting
+    const timestamp = new Date().getTime();
     Promise.all([
-      fetch('/api/classes').then(res => res.json()),
-      fetch('/api/teacher-registration/subject-list').then(res => res.json())
+      fetch(`/api/classes?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      }).then(res => res.json()),
+      fetch(`/api/teacher-registration/subject-list?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      }).then(res => res.json())
     ])
       .then(([classesData, subjectsData]) => {
         setClasses(classesData);
@@ -70,7 +85,15 @@ export default function ViewSyllabuses() {
   const fetchAllLessons = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/lessons/all');
+      const timestamp = new Date().getTime();
+      const response = await fetch(`/api/lessons/all?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (response.ok) {
         const data = await response.json();
         setLessons(data);
@@ -107,6 +130,9 @@ export default function ViewSyllabuses() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         },
         body: JSON.stringify({
           lessonName: editingLesson.lessonName,
@@ -116,11 +142,8 @@ export default function ViewSyllabuses() {
       });
 
       if (response.ok) {
-        // Update the lessons state with edited lesson
-        const updatedLessons = lessons.map(lesson => 
-          lesson.id === editingLesson.id ? { ...lesson, ...editingLesson } : lesson
-        );
-        setLessons(updatedLessons);
+        // Refresh the lessons list to get latest data
+        await fetchAllLessons();
         setIsEditing(false);
         setEditingLesson(null);
         alert('Lesson updated successfully!');
@@ -141,10 +164,16 @@ export default function ViewSyllabuses() {
       try {
         const response = await fetch(`/api/lessons/${lessonId}`, {
           method: 'DELETE',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
         });
 
         if (response.ok) {
-          setLessons(lessons.filter(lesson => lesson.id !== lessonId));
+          // Refresh the lessons list to get latest data
+          await fetchAllLessons();
           alert('Lesson deleted successfully.');
         } else {
           alert('Failed to delete lesson.');
@@ -195,13 +224,21 @@ export default function ViewSyllabuses() {
           </select>
         </div>
         
-        <div className={styles.filterItem} style={{ display: 'flex', alignItems: 'flex-end' }}>
+        <div className={styles.filterItem} style={{ display: 'flex', alignItems: 'flex-end', gap: '0.5rem' }}>
           <button 
             className={styles.clearButton} 
             onClick={() => setFilters({ subject: '', class: '' })}
             style={{ marginTop: '1.5rem' }}
           >
             Clear Filters
+          </button>
+          <button 
+            className={styles.refreshButton} 
+            onClick={fetchAllLessons}
+            disabled={loading}
+            style={{ marginTop: '1.5rem' }}
+          >
+            {loading ? 'Refreshing...' : 'Refresh Data'}
           </button>
         </div>
       </div>

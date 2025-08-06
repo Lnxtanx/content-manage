@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 
+// Disable caching for this route to ensure fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const classes = await prisma.class.findMany({
@@ -13,7 +17,14 @@ export async function GET() {
         name: true,
       },
     });
-    return NextResponse.json(classes);
+    
+    return NextResponse.json(classes, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to fetch classes' },

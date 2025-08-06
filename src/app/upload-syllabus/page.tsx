@@ -27,10 +27,11 @@ export default function UploadSyllabus() {
   const [isGlobalSyllabus, setIsGlobalSyllabus] = useState(true);
 
   useEffect(() => {
-    // Fetch classes and subjects in parallel
+    // Fetch classes and subjects in parallel with cache-busting
+    const timestamp = new Date().getTime();
     Promise.all([
-      fetch('/api/classes').then(res => res.json()),
-      fetch('/api/teacher-registration/subject-list').then(res => res.json())
+      fetch(`/api/classes?t=${timestamp}`).then(res => res.json()),
+      fetch(`/api/teacher-registration/subject-list?t=${timestamp}`).then(res => res.json())
     ])
       .then(([classesData, subjectsData]) => {
         setClasses(classesData);
@@ -54,14 +55,15 @@ export default function UploadSyllabus() {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setMessage('File size should be less than 10MB');
+    // Updated file size limit to 50MB
+    if (file.size > 50 * 1024 * 1024) {
+      setMessage('File size should be less than 50MB');
       setTimeout(() => setMessage(''), 5000);
       return;
     }
 
     setLoading(true);
-    setMessage('');
+    setMessage('Uploading... This may take a while for large files.');
     
     const formData = new FormData();
     formData.append('classId', selectedClass);
@@ -76,6 +78,8 @@ export default function UploadSyllabus() {
       const response = await fetch('/api/upload-syllabus', {
         method: 'POST',
         body: formData,
+        // Add timeout for large files (10 minutes)
+        signal: AbortSignal.timeout(600000),
       });
 
       const data = await response.json();
@@ -95,11 +99,15 @@ export default function UploadSyllabus() {
         if (fileInput) fileInput.value = '';
       } else {
         setMessage(`Error: ${data.error || 'Failed to upload syllabus'}`);
-        setTimeout(() => setMessage(''), 5000);
+        setTimeout(() => setMessage(''), 8000);
       }
     } catch (error) {
-      setMessage('Error: Network error or server not responding');
-      setTimeout(() => setMessage(''), 5000);
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        setMessage('Error: Upload timeout - file is too large or connection is slow');
+      } else {
+        setMessage('Error: Network error or server not responding');
+      }
+      setTimeout(() => setMessage(''), 8000);
     } finally {
       setLoading(false);
     }
@@ -191,7 +199,7 @@ export default function UploadSyllabus() {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="file">Upload PDF (max 10MB)</label>
+          <label htmlFor="file">Upload PDF (max 50MB)</label>
           <input
             type="file"
             id="file"
@@ -200,6 +208,11 @@ export default function UploadSyllabus() {
             required
             className={styles.fileInput}
           />
+          {file && (
+            <div className={styles.fileInfo}>
+              Selected: {file.name} ({(file.size / (1024 * 1024)).toFixed(2)} MB)
+            </div>
+          )}
         </div>
 
         <div className={styles.formGroup}>
