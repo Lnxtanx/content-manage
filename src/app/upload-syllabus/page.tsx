@@ -55,9 +55,9 @@ export default function UploadSyllabus() {
       return;
     }
 
-    // Updated file size limit to 50MB
-    if (file.size > 50 * 1024 * 1024) {
-      setMessage('File size should be less than 50MB');
+    // Updated file size limit to 10MB to match AWS default limits
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage('File size should be less than 10MB');
       setTimeout(() => setMessage(''), 5000);
       return;
     }
@@ -199,7 +199,7 @@ export default function UploadSyllabus() {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="file">Upload PDF (max 50MB)</label>
+          <label htmlFor="file">Upload PDF (max 10MB)</label>
           <input
             type="file"
             id="file"

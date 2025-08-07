@@ -13,9 +13,9 @@ export const maxDuration = 120; // 120 seconds timeout for large file uploads
 export async function POST(request: NextRequest) {
   // Check content length before processing
   const contentLength = request.headers.get('content-length');
-  if (contentLength && parseInt(contentLength) > 60 * 1024 * 1024) { // 60MB limit
+  if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) { // 10MB limit to match AWS defaults
     return NextResponse.json(
-      { error: 'File size exceeds 60MB limit' },
+      { error: 'File size exceeds 10MB limit' },
       { status: 413 }
     );
   }
@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (60MB limit)
-    const maxSize = 60 * 1024 * 1024; // 60MB
+    // Validate file size (10MB limit to match AWS defaults)
+    const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
       console.warn(`File size exceeds limit: ${file.size} bytes`);
       return NextResponse.json(
-        { error: `File size exceeds 60MB limit (received: ${Math.round(file.size / (1024 * 1024))}MB)` },
+        { error: `File size exceeds 10MB limit (received: ${Math.round(file.size / (1024 * 1024))}MB)` },
         { status: 400, headers }
       );
     }

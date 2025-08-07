@@ -8,8 +8,16 @@ const nextConfig = {
     optimizePackageImports: ['react-icons'],
     // Disable features that might cause build issues
     memoryBasedWorkersCount: true,
-    // Increase body size limit for large file uploads
+    // Body size limit set to 10MB to match AWS defaults
     serverComponentsExternalPackages: ['sharp'],
+  },
+  
+  // API route body parser configuration
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb', // Set body parser limit to 10MB to match AWS defaults
+    },
+    responseLimit: '10mb',
   },
   
   // Production-specific security headers
